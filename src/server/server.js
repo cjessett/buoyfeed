@@ -8,9 +8,10 @@ const instance = app({ mongoUrl: MONGODB_URL, url: FEED_URL })
 
 function createServer() {
   instance.watchFeed()
+  const webInstance = web(instance)
 
-  const server = web.listen(process.env.PORT || 8080, () => {
-    console.log(`[server] app on http://localhost:${server.address().port} - ${web.settings.env}`)
+  const server = webInstance.listen(process.env.PORT || 8080, () => {
+    console.log(`[server] app on http://localhost:${server.address().port} - ${webInstance.settings.env}`)
   })
 
   function shutdown() {

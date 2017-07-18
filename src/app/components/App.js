@@ -14,11 +14,7 @@ const Content = connect(
     pathname: getPathname(state)
   })
 )(({ pathname }) => { // todo: make routing more robust
-  if (pathname.indexOf('/blog/') > -1) {
-    return <Post />
-  } else if (pathname === '/blog') {
-    return <Posts />
-  } else if (pathname === '/about') {
+  if (pathname === '/about') {
     return <About />
   } else if (pathname === '/') {
     return <Home />

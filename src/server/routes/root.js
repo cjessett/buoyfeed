@@ -1,12 +1,12 @@
 import { h } from 'preact' // eslint-disable-line no-unused-vars
 import render from 'preact-render-to-string'
-import createStore from './../../app/store/createStore'
-import App from './../../app/components/App'
+import { readFileSync } from 'fs'
 import { Router } from 'express'
 import fetch from 'node-fetch'
+import createStore from './../../app/store/createStore'
+import App from './../../app/components/App'
 import withTimeout from './../../app/utils/withTimeout'
-import { readFileSync } from 'fs'
-import { fetchPostsIfNeeded } from './../../app/store/actions/posts'
+import { loadBuoys } from './../../app/store/actions/posts'
 import { updateLocation } from './../../app/store/actions/meta'
 
 const assets = JSON.parse(readFileSync(`${__dirname}/public/assets.json`))
@@ -17,7 +17,7 @@ const AppShell = ({ html, state }) => `<!DOCTYPE html>
 <html lang="en-US">
   <head>
     <script>if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js'); }</script>
-    <title>Preact PWA</title>
+    <title>BuoyFeed</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="mobile-web-app-capable" content="yes">
@@ -35,7 +35,7 @@ const AppShell = ({ html, state }) => `<!DOCTYPE html>
   </body>
 </html>`
 
-const createPreloadedState = () => ({}) // stub
+const createPreloadedState = () => ({})
 
 const createAppShell = (store) => {
   const state = store.getState()
@@ -43,14 +43,16 @@ const createAppShell = (store) => {
   return AppShell({ html, state })
 }
 
-export default Router().get('/', (req, res) => {
-  const store = createStore(createPreloadedState(), fetch)
-  store.dispatch(updateLocation(req.originalUrl))
-  withTimeout(
-    store.dispatch(fetchPostsIfNeeded()),
-    100 // adjust for optimal threshold
-  )
-  .catch((err) => console.log(err))
-  .then(() => res.send(createAppShell(store)))
-  .catch((err) => console.log(err))
-})
+export default app => (
+  Router().get('/', (req, res) => {
+    const store = createStore(createPreloadedState(), fetch)
+    store.dispatch(updateLocation(req.originalUrl))
+    withTimeout(
+      store.dispatch(loadBuoys(app.getBuoys())),
+      100 // adjust for optimal threshold
+    )
+    .catch(err => console.log(err))
+    .then(() => res.send(createAppShell(store)))
+    .catch(err => console.log(err))
+  })
+)
