@@ -18,7 +18,7 @@ const mdl = fs.readFileSync('node_modules/material-design-lite/material.min.css'
 
 const server = () => rollup({
   entry: 'src/server/server.js',
-  external: Object.keys(dependencies).concat(['fs']),
+  external: Object.keys(dependencies).concat(['fs', 'util', 'events']),
   plugins: [
     replace({ '__CLIENT__': false }),
     json(),
