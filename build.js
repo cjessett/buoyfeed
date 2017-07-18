@@ -82,7 +82,7 @@ const run = (task) => {
   const start = new Date()
   return tasks.get(task)().then(
     () => console.log('\x1b[36m%s\x1b[0m', '[build]', `'${task}' done in ${new Date().getTime() - start.getTime()}ms`),
-    (err) => console.error('\x1b[31m%s\x1b[0m', '[build]', `error running '${task}':`, err.stack)
+    (err) => console.error('\x1b[31m%s\x1b[0m', '[build]', `error running '${task}':`, err)
   )
 }
 

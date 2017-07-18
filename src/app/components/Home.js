@@ -1,27 +1,29 @@
 import { h } from 'preact' // eslint-disable-line no-unused-vars
+import PreactRedux from 'preact-redux'
 
-const Card = ({ name, description, isFavorite }) => (
+const { connect } = PreactRedux
+
+const Card = ({ title, description, link, isFavorite }) => (
   <div className='mdl-card card'>
     <div className='mdl-card__title'>
-      <h2 className='mdl-card__title-text'>{name}</h2>
+      <h2 className='mdl-card__title-text'>{title}</h2>
       <input type='checkbox' checked={isFavorite} style={{ margin: '0.5em' }}/>
     </div>
-    <p className='mdl-card__supporting-text'>
-      <em>{description}</em>
-    </p>
-    <p className='mdl-card__actions'>
-      available at <a href='https://github.com'>github.com</a>
+    <p
+      className='mdl-card__supporting-text'
+      dangerouslySetInnerHTML={{ __html: description }}
+      style={{ textAlign: 'center' }}
+    />
+    <p className='mdl-card__actions' style={{ textAlign: 'center' }}>
+      available at <a href={link}>ndbc.noaa.gov</a>
     </p>
   </div>
 )
 
-export default () => (
+const Home = ({ buoys }) => (
   <div className='Home page'>
-    <Card name='buoy 1' description='swell: 5m' isFavorite />
-    <Card name='buoy 2' description='swell: 5m' isFavorite />
-    <Card name='boat' description='swell: 5m'/>
-    <Card name='buoy 1' description='swell: 5m'/>
-    <Card name='buoy 2' description='swell: 5m' isFavorite />
-    <Card name='boat' description='swell: 5m'/>
+    {buoys.map(b => <Card id={b.id} title={b.title} description={b.description} link={b.link} />)}
   </div>
 )
+
+export default connect((state) => ({ buoys: state.buoys.collection }))(Home)

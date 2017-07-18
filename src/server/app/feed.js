@@ -9,7 +9,7 @@ export default function createFeed({ connection, url }) {
     title: String,
     pubDate: String,
     description: String,
-    link: { type: String, index: true, unique: true },
+    url: { type: String, index: true, unique: true, default: url },
     items: [{ pubDate: String, title: String, description: String, link: String, guid: String }],
   })
 
@@ -43,7 +43,6 @@ export default function createFeed({ connection, url }) {
               title: feed.title[0],
               pubDate: feed.pubDate[0],
               description: feed.description[0],
-              link: feed['atom:link'][0].$.href,
               items: feed.item.map(getItemProps),
             })
           })
@@ -56,15 +55,21 @@ export default function createFeed({ connection, url }) {
       }
 
       function saveFeed(data) {
-        const { title, description, pubDate, link } = data
-        console.log('saving feed', { title, description, pubDate, link })
-        return Feed.findOneAndUpdate({ link }, data, { upsert: true }, () => Promise.resolve())
+        const { title, description, pubDate } = data
+        console.log('saving feed', { title, description, pubDate })
+        return Feed.findOneAndUpdate({ url }, data, { upsert: true }, () => Promise.resolve())
       }
 
       return fetchFeed()
         .then(parseFeed)
         .then(saveFeed)
         .catch(err => console.log(err))
+    },
+
+    listBuoys() {
+      return this.findOne({ url: this().url })
+        .exec()
+        .then(feed => feed.items)
     },
   }
 

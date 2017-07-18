@@ -31,6 +31,10 @@ App.prototype.watchFeed = function (url) {
   setInterval(() => this.Feed.pullFeed(url), TEN_MINUTES)
 }
 
+App.prototype.getBuoys = function () {
+  return this.Feed.listBuoys()
+}
+
 export default function (config) {
   return new App(config)
 }
