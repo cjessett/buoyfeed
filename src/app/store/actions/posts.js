@@ -33,9 +33,9 @@ export const fetchPostsIfNeeded = () => (dispatch, getState) => {
   return getShouldFetchPosts(state) ? dispatch(fetchPosts()) : Promise.resolve(getPosts(state))
 }
 
-export const loadBuoys = query => (dispatch) => {
+export const loadBuoys = query => (dispatch, _, fetchMethod) => {
   dispatch(startAction(FETCH_POSTS))
-  return query
+  return query || fetchMethod('/buoys').then(checkStatus).then(parseJSON)
   .then(buoys => dispatch(successAction(FETCH_BUOYS_SUCCESS, buoys)))
   .catch(error => dispatch(errorAction(FETCH_POSTS_ERROR, error)))
 }

@@ -1,5 +1,6 @@
-import { h } from 'preact' // eslint-disable-line no-unused-vars
+import { h, Component } from 'preact' // eslint-disable-line no-unused-vars
 import PreactRedux from 'preact-redux'
+import { loadBuoys } from './../store/actions/posts'
 
 const { connect } = PreactRedux
 
@@ -20,10 +21,20 @@ const Card = ({ title, description, link, isFavorite }) => (
   </div>
 )
 
-const Home = ({ buoys }) => (
-  <div className='Home page'>
-    {buoys.map(b => <Card id={b.id} title={b.title} description={b.description} link={b.link} />)}
-  </div>
-)
+class Home extends Component {
+  componentDidMount() {
+    this.props.loadBuoys();
+  }
 
-export default connect((state) => ({ buoys: state.buoys.collection }))(Home)
+  render(props) {
+    return (
+      <div className='Home page'>
+        {props.buoys
+          .map(b => <Card id={b.id} title={b.title} description={b.description} link={b.link} />)
+        }
+      </div>
+    )
+  }
+}
+
+export default connect(state => ({ buoys: state.buoys.collection }), { loadBuoys })(Home)

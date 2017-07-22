@@ -1,6 +1,6 @@
 {
-	"name": "Preact PWA",
-	"short_name": "Preact PWA",
+	"name": "BuoyFeed",
+	"short_name": "BuoyFeed",
 	"start_url": "/",
 	"background_color": "#f1f1f1",
 	"theme_color": "#673ab8",
