@@ -2,7 +2,6 @@ import { EventEmitter } from 'events'
 import util from 'util'
 import connections from './connections'
 import FeedModel from './feed'
-import { TEN_MINUTES } from '../constants'
 
 function App(config) {
   EventEmitter.call(this)
@@ -26,9 +25,8 @@ App.prototype.onLost = function () {
   this.emit('lost')
 }
 
-App.prototype.watchFeed = function (url) {
-  this.Feed.pullFeed(url)
-  setInterval(() => this.Feed.pullFeed(url), TEN_MINUTES)
+App.prototype.updateFeed = function () {
+  this.Feed.pullFeed()
 }
 
 App.prototype.getBuoys = function () {

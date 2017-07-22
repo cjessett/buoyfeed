@@ -69,7 +69,7 @@ export default function createFeed({ connection, url }) {
     listBuoys() {
       return this.findOne({ url: this().url })
         .exec()
-        .then(feed => feed.items)
+        .then(feed => feed && feed.items)
     },
   }
 

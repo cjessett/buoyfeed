@@ -13,3 +13,6 @@ coverage
 
 .DS_Store
 .eslint*
+
+# pm2
+ecosystem.config.js
