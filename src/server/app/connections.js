@@ -2,12 +2,13 @@ import mongoose from 'mongoose'
 import { EventEmitter } from 'events'
 import util from 'util'
 
-function Connector(mongoUrl) {
+function Connector({ host, database, port, user, password }) {
   EventEmitter.call(this)
 
-  this.db = mongoose.createConnection(mongoUrl)
+  const uri = `mongodb://${user}:${password}@${host}:${port}/${database}`
+  this.db = mongoose.createConnection(uri)
   .on('connected', () => {
-    console.log({ type: 'info', msg: 'connected', service: 'mongodb' })
+    console.log({ type: 'info', msg: 'connected', service: 'mongodb', uri })
     this.emit('ready')
   })
   .on('error', (err) => {

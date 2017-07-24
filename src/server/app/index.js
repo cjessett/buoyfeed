@@ -7,7 +7,7 @@ function App(config) {
   EventEmitter.call(this)
 
   this.config = config
-  this.connections = connections(config.mongoUrl)
+  this.connections = connections(config.mongoConfig)
   this.connections.once('ready', this.onConnected.bind(this))
   this.connections.once('lost', this.onLost.bind(this))
 }

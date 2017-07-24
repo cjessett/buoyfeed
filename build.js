@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const rollup = require('rollup').rollup
 const buble = require('rollup-plugin-buble')
 const commonjs = require('rollup-plugin-commonjs')
@@ -15,6 +17,7 @@ const swPrecache = require('sw-precache').write
 const nodeRev = require('node-rev').default
 
 const mdl = fs.readFileSync('node_modules/material-design-lite/material.min.css', 'utf-8');
+const sourceMap = process.env.NODE_ENV === 'development'
 
 const server = () => rollup({
   entry: 'src/server/server.js',
@@ -25,7 +28,7 @@ const server = () => rollup({
     commonjs({ extensions: [ '.js', '.json' ] }),
     buble({ jsx: 'h', objectAssign: 'Object.assign' })
   ]
-}).then((bundle) => bundle.write({ sourceMap: true, format: 'cjs', dest: `build/server.js` }))
+}).then((bundle) => bundle.write({ sourceMap, format: 'cjs', dest: `build/server.js` }))
 
 const client = () => rollup({
   entry: 'src/app/entry.js',
@@ -39,7 +42,7 @@ const client = () => rollup({
     optimizeJs()
   ]
 })
-.then((bundle) => bundle.write({ sourceMap: true, format: 'iife', dest: `build/public/bundle.js` }))
+.then((bundle) => bundle.write({ sourceMap, format: 'iife', dest: `build/public/bundle.js` }))
 
 const css = () => new Promise((resolve, reject) => sass({ file: `src/app/styles/entry.scss` }, (err, result) => err ? reject(err) : resolve(result)))
   .then(({ css }) => purifycss(['src/app/components/**/*.js'], css.toString().concat(mdl)))

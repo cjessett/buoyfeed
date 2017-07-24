@@ -1,12 +1,13 @@
 import web from './web'
 import app from './app'
-import { MONGODB_URL, FEED_URL } from './constants'
+import { FEED_URL } from './constants'
+import mongoConfig from './mongoConfig'
 
 require('dotenv').config()
 
 require('source-map-support').install()
 
-const instance = app({ mongoUrl: MONGODB_URL, url: FEED_URL })
+const instance = app({ mongoConfig, url: FEED_URL })
 
 function createServer() {
   instance.updateFeed()

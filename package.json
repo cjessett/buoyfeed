@@ -11,7 +11,7 @@
     "build": "node build",
     "test": "standard",
     "restart": "pm2 startOrRestart ecosystem.config.js",
-    "deploy": "yarn build && pm2 deploy ecosystem.config.js production"
+    "deploy": "pm2 deploy ecosystem.config.js production"
   },
   "dependencies": {
     "dotenv": "^4.0.0",
