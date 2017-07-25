@@ -5,6 +5,7 @@ export const FETCH_POSTS_SUCCESS = 'api/FETCH_POSTS_SUCCESS'
 export const FETCH_POSTS_ERROR = 'api/FETCH_POSTS_ERROR'
 export const INVALIDATE_FETCH_POSTS = 'api/INVALIDATE_FETCH_POSTS'
 export const FETCH_BUOYS_SUCCESS = 'api/FETCH_BUOYS_SUCCESS'
+export const FAVORITE = 'FAVORITE'
 
 const checkStatus = (response) => {
   if (!response.ok) { // status in the range 200-299 or not
@@ -39,3 +40,5 @@ export const loadBuoys = query => (dispatch, _, fetchMethod) => {
   .then(buoys => dispatch(successAction(FETCH_BUOYS_SUCCESS, buoys)))
   .catch(error => dispatch(errorAction(FETCH_POSTS_ERROR, error)))
 }
+
+export const favorite = id => ({ id, type: FAVORITE })

@@ -6,7 +6,7 @@ import fetch from 'node-fetch'
 import createStore from './../../app/store/createStore'
 import App from './../../app/components/App'
 import withTimeout from './../../app/utils/withTimeout'
-import { loadBuoys } from './../../app/store/actions/posts'
+import { loadBuoys } from './../../app/store/actions/buoys'
 import { updateLocation } from './../../app/store/actions/meta'
 
 const assets = JSON.parse(readFileSync(`${__dirname}/public/assets.json`))

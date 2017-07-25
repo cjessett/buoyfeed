@@ -1,8 +1,30 @@
 .Home {
+  .clickable:hover {
+    cursor: pointer;
+  }
   .card {
     margin: 1em auto;
-    width: 70vw;
+    width: 75vw
   }
+  .data-wrap {
+    width: 100%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  h4 {
+    margin-bottom: 1em;
+  }
+  @media (max-width: 600px) {
+  .card {
+    width: 100%;
+  }
+  .data-wrap {
+    width: 100%;
+    margin: 15px;
+    display: inherit;
+  }
+}
   ul {
     padding-left: 32px;
     li {

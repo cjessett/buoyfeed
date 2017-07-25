@@ -2,7 +2,7 @@ import { h, render } from 'preact' // eslint-disable-line no-unused-vars
 import 'preact/devtools'
 import App from './components/App'
 import createStore from './store/createStore'
-import { fetchPostsIfNeeded } from './store/actions/posts'
+import { fetchPostsIfNeeded } from './store/actions/buoys'
 import { updateLocation } from './store/actions/meta'
 import { getUrl } from './store/selectors/meta'
 import ensurePolyfills from './utils/ensurePolyfills'
