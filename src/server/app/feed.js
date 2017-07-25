@@ -10,12 +10,51 @@ export default function createFeed({ connection, url }) {
     pubDate: String,
     description: String,
     url: { type: String, index: true, unique: true, default: url },
-    items: [{ pubDate: String, title: String, description: String, link: String, guid: String }],
+    items: [{
+      pubDate: String,
+      title: String,
+      description: String,
+      link: String,
+      guid: String,
+      data: {
+        pubDate: String,
+        location: String,
+        windDirection: String,
+        windSpeed: String,
+        windGust: String,
+        significantWaveHeight: String,
+        dominantWavePeriod: String,
+        averagePeriod: String,
+        meanWaveDirection: String,
+        atmosphericPressure: String,
+        pressureTendency: String,
+        airTemperature: String,
+        waterTemperature: String,
+      },
+    }],
   })
 
   feedSchema.statics = {
     pullFeed() {
       const Feed = this
+
+      function descriptionToData(description) {
+        const gimmeKey = mess => mess.replace('<strong>', '').replace(':', '')
+        const gimmeVal = mess => mess.replace('<br />', '').trim()
+        const camelize = text => `${text.charAt(0).toLowerCase()}${text.slice(1)}`.replace(/ /g, '')
+        const decode = text => text.replace(/&#(\d+);/g, (_, d) => String.fromCharCode(d))
+        return description
+          .trim()
+          .split('\n')
+          .map(t => t.trim())
+          .map(f => f.split('</strong>'))
+          .map(p => ([gimmeKey(p[0]), gimmeVal(p[1])]))
+          .reduce((acc, pair, i) => {
+            const data = i ? { [camelize(pair[0])]: decode(pair[1]) } : { pubDate: pair[0] }
+            return Object.assign({}, acc, data)
+          }, {})
+      }
+
       function getItemProps(item) {
         const { pubDate, title, description, link, guid } = item
         const [N, W] = item['georss:point'][0].split(' ')
@@ -23,7 +62,7 @@ export default function createFeed({ connection, url }) {
           id: guid[0]._,
           pubDate: pubDate[0],
           title: title[0],
-          description: description[0],
+          data: descriptionToData(description[0]),
           link: link[0],
           coordinates: { N, W },
         }
