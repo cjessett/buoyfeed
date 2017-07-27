@@ -10,7 +10,8 @@ export default ({ id, title, data, link, isFavorite, handleClick }) => (
         </i>
       </button>
     </div>
-    <p className="mdl-card__supporting-text">{data.pubDate}</p>
+    <p className="mdl-card__supporting-text t1"><strong>Last Update: </strong>{data.pubDate}</p>
+    <p className="mdl-card__supporting-text t1"><strong>Location: </strong>{data.location}</p>
     <div className="data-wrap">
       <span className="mdl-card__supporting-text">
         <h4 className="mdl-card__title-text">Waves</h4>
