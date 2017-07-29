@@ -1,4 +1,4 @@
-import { FETCH_POSTS, FETCH_BUOYS_SUCCESS, FETCH_POSTS_ERROR, INVALIDATE_FETCH_POSTS, FAVORITE } from './../actions/buoys'
+import { FETCH_BUOYS, FETCH_BUOYS_SUCCESS, FETCH_BUOYS_ERROR, INVALIDATE_FETCH_BUOYS, FAVORITE } from './../actions/buoys'
 
 export const initialState = {
   didInvalidate: false,
@@ -6,30 +6,44 @@ export const initialState = {
   hasFetched: false,
   hasError: false,
   error: null,
-  collection: [] // do not mutate these
+  collection: [],
 }
 
-export default (state = initialState, { type, payload, meta, id }) => {
+export default (state = initialState, { type, payload, id }) => {
   switch (type) {
-    case FETCH_POSTS:
-     return {
-       ...state,
-       didInvalidate: false,
-       isFetching: true,
-       hasFetched: false,
-       hasError: false,
-       error: null,
-     }
-    case FETCH_POSTS_ERROR:
+    case FETCH_BUOYS:
+      return {
+        ...state,
+        didInvalidate: false,
+        isFetching: true,
+        hasFetched: false,
+        hasError: false,
+        error: null,
+      }
+    case FETCH_BUOYS_ERROR:
+      return {
+        ...state,
+        hasError: true,
+        error: payload,
+        hasFetched: true,
+        isFetching: false,
+        didInvalidate: true,
+      }
     case FETCH_BUOYS_SUCCESS:
-      return { ...state, collection: payload }
-    case INVALIDATE_FETCH_POSTS:
-      return state
+      return {
+        ...state,
+        collection: payload,
+        hasFetched: true,
+        isFetching: false,
+        didInvalidate: false,
+      }
+    case INVALIDATE_FETCH_BUOYS:
+      return { ...state, didInvalidate: true }
     case FAVORITE:
       return {
         ...state,
         collection: state.collection.map(b => (
-          b['_id'] === id ? { ...b, isFavorite: !b.isFavorite } : b
+          b.id === id ? { ...b, isFavorite: !b.isFavorite } : b
         )),
       }
     default:

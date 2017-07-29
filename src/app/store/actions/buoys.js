@@ -1,10 +1,9 @@
-import { getShouldFetchPosts, getPosts } from './../selectors/posts'
+import { getShouldFetchBuoys, getBuoys } from './../selectors/buoys'
 
-export const FETCH_POSTS = 'api/FETCH_POSTS'
-export const FETCH_POSTS_SUCCESS = 'api/FETCH_POSTS_SUCCESS'
-export const FETCH_POSTS_ERROR = 'api/FETCH_POSTS_ERROR'
-export const INVALIDATE_FETCH_POSTS = 'api/INVALIDATE_FETCH_POSTS'
+export const FETCH_BUOYS = 'api/FETCH_BUOYS'
 export const FETCH_BUOYS_SUCCESS = 'api/FETCH_BUOYS_SUCCESS'
+export const FETCH_BUOYS_ERROR = 'api/FETCH_BUOYS_ERROR'
+export const INVALIDATE_FETCH_BUOYS = 'api/INVALIDATE_FETCH_BUOYS'
 export const FAVORITE = 'FAVORITE'
 
 const checkStatus = (response) => {
@@ -20,25 +19,18 @@ const startAction = type => ({ type })
 const successAction = (type, json) => ({ type, payload: json })
 const errorAction = (type, error) => ({ type, payload: error, error: true })
 
-const fetchPosts = () => (dispatch, getState, fetchMethod) => {
-  dispatch(startAction(FETCH_POSTS))
-  return fetchMethod('https://jsonplaceholder.typicode.com/posts')
+export const fetchBuoys = query => (dispatch, _, fetchMethod) => {
+  dispatch(startAction(FETCH_BUOYS))
+  return query || fetchMethod('/buoys')
   .then(checkStatus)
   .then(parseJSON)
-  .then(json => dispatch(successAction(FETCH_POSTS_SUCCESS, json)))
-  .catch(error => dispatch(errorAction(FETCH_POSTS_ERROR, error)))
-}
-
-export const fetchPostsIfNeeded = () => (dispatch, getState) => {
-  const state = getState()
-  return getShouldFetchPosts(state) ? dispatch(fetchPosts()) : Promise.resolve(getPosts(state))
-}
-
-export const loadBuoys = query => (dispatch, _, fetchMethod) => {
-  dispatch(startAction(FETCH_POSTS))
-  return query || fetchMethod('/buoys').then(checkStatus).then(parseJSON)
   .then(buoys => dispatch(successAction(FETCH_BUOYS_SUCCESS, buoys)))
-  .catch(error => dispatch(errorAction(FETCH_POSTS_ERROR, error)))
+  .catch(error => dispatch(errorAction(FETCH_BUOYS_ERROR, error)))
+}
+
+export const fetchBuoysIfNeeded = () => (dispatch, getState) => {
+  const state = getState()
+  return getShouldFetchBuoys(state) ? dispatch(fetchBuoys()) : Promise.resolve(getBuoys(state))
 }
 
 export const favorite = id => ({ id, type: FAVORITE })

@@ -5,27 +5,26 @@ import Link from './Link'
 
 const { connect } = PreactRedux
 
-const Header = ({ _updateLocation }) => (
-  <header className='Header'>
+const Header = ({ _updateLocation, auth }) => (
+  <header className="Header">
     <h1>
-      <Link className='item' href='/' onClick={(e) => {
-        _updateLocation('/')
-      }}>Buoy Feed</Link>
+      <Link className="item" href="/" onClick={() => _updateLocation('/')}>Buoy Feed</Link>
     </h1>
     <nav>
-      <Link className='item' href='/' onClick={(e) => {
-        _updateLocation('/')
-      }}>Home</Link>
-      <Link className='item' href='/about' onClick={(e) => {
-        _updateLocation('/about')
-      }}>About</Link>
+      <Link className="item" href="/" onClick={() => _updateLocation('/')}>Home</Link>
+      {auth.isAuthenticated() &&
+        <Link className="item" href="/profile" onClick={() => _updateLocation('/profile')}>
+          Profile
+        </Link>}
+      {auth.isAuthenticated() ?
+        <Link className="item" onClick={() => auth.logout()}>Logout</Link> :
+        <Link className="item" onClick={() => auth.login()}>Login</Link>
+      }
     </nav>
   </header>
 )
 
 export default connect(
   null,
-  (dispatch) => ({
-    _updateLocation: (url) => dispatch(updateLocation(url))
-  })
+  dispatch => ({ _updateLocation: url => dispatch(updateLocation({ url })) })
 )(Header)

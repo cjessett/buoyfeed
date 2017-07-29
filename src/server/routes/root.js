@@ -6,7 +6,7 @@ import fetch from 'node-fetch'
 import createStore from './../../app/store/createStore'
 import App from './../../app/components/App'
 import withTimeout from './../../app/utils/withTimeout'
-import { loadBuoys } from './../../app/store/actions/buoys'
+import { fetchBuoys } from './../../app/store/actions/buoys'
 import { updateLocation } from './../../app/store/actions/meta'
 
 const assets = JSON.parse(readFileSync(`${__dirname}/public/assets.json`))
@@ -46,9 +46,9 @@ const createAppShell = (store) => {
 export default app => (
   Router().get('/', (req, res) => {
     const store = createStore(createPreloadedState(), fetch)
-    store.dispatch(updateLocation(req.originalUrl))
+    store.dispatch(updateLocation({ url: req.originalUrl }))
     withTimeout(
-      store.dispatch(loadBuoys(app.getBuoys())),
+      store.dispatch(fetchBuoys(app.getBuoys())),
       100 // adjust for optimal threshold
     )
     .catch(err => console.log(err))
