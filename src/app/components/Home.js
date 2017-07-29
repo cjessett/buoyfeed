@@ -1,21 +1,22 @@
 import { h, Component } from 'preact' // eslint-disable-line no-unused-vars
 import PreactRedux from 'preact-redux'
 
-import Card from './Card'
-import { loadBuoys, favorite } from './../store/actions/buoys'
+import Buoy from './Buoy'
+import { fetchBuoys, favorite } from './../store/actions/buoys'
+import { getBuoys } from '../store/selectors/buoys'
 
 const { connect } = PreactRedux
 
 class Home extends Component {
   componentDidMount() {
-    this.props.loadBuoys();
+    this.props.fetchBuoys()
   }
 
   render(props) {
     const buoys = props
     .buoys
     .map(b =>
-      <Card
+      <Buoy
         id={b._id}
         title={b.title}
         data={b.data}
@@ -24,16 +25,11 @@ class Home extends Component {
         handleClick={props.favorite}
       />)
     return (
-      <div className='Home page'>
+      <div className="Home page">
         {buoys}
       </div>
     )
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  loadBuoys: () => dispatch(loadBuoys()),
-  favorite: id => dispatch(favorite(id)),
-})
-
-export default connect(state => ({ buoys: state.buoys.collection }), { loadBuoys, favorite })(Home)
+export default connect(state => ({ buoys: getBuoys(state) }), { fetchBuoys, favorite })(Home)
