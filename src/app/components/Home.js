@@ -2,14 +2,17 @@ import { h, Component } from 'preact' // eslint-disable-line no-unused-vars
 import PreactRedux from 'preact-redux'
 
 import Buoy from './Buoy'
-import { fetchBuoys, favorite } from './../store/actions/buoys'
+import { fetchBuoys, favorite, fetchFavorites } from './../store/actions/buoys'
+import { setToken } from '../store/actions/meta'
 import { getBuoys } from '../store/selectors/buoys'
 
 const { connect } = PreactRedux
 
 class Home extends Component {
   componentDidMount() {
+    this.props.setToken(localStorage.getItem('id_token'))
     this.props.fetchBuoys()
+    // if (this.props.isAuthenticated()) this.props.fetchFavorites()
   }
 
   render(props) {
@@ -17,11 +20,11 @@ class Home extends Component {
     .buoys
     .map(b =>
       <Buoy
-        id={b._id}
+        id={b.guid}
         title={b.title}
         data={b.data}
         link={b.link}
-        isFavorite={b.isFavorite}
+        isFavorite={props.favs.includes(b.guid)}
         handleClick={props.favorite}
       />)
     return (
@@ -32,4 +35,11 @@ class Home extends Component {
   }
 }
 
-export default connect(state => ({ buoys: getBuoys(state) }), { fetchBuoys, favorite })(Home)
+export default connect(
+  state => ({
+    buoys: getBuoys(state),
+    favs: state.user.favorites,
+    isAuthenticated: state.auth.isAuthenticated,
+  }),
+  { fetchBuoys, favorite, fetchFavorites, setToken }
+)(Home)

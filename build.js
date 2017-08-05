@@ -25,10 +25,21 @@ const server = () => rollup({
   plugins: [
     replace({ '__CLIENT__': false }),
     json(),
-    commonjs({ extensions: [ '.js', '.json' ] }),
+    commonjs({ extensions: ['.js', '.json'] }),
     buble({ jsx: 'h', objectAssign: 'Object.assign' })
   ]
-}).then((bundle) => bundle.write({ sourceMap, format: 'cjs', dest: `build/server.js` }))
+}).then(bundle => bundle.write({ sourceMap, format: 'cjs', dest: 'build/server.js' }))
+
+const worker = () => rollup({
+  entry: 'src/server/worker.js',
+  external: Object.keys(dependencies).concat(['fs', 'util', 'events', 'http']),
+  plugins: [
+    replace({ '__CLIENT__': false }),
+    json(),
+    commonjs({ extensions: ['.js', '.json'] }),
+    buble({ jsx: 'h', objectAssign: 'Object.assign' })
+  ]
+}).then(bundle => bundle.write({ sourceMap, format: 'cjs', dest: 'build/worker.js' }))
 
 const client = () => rollup({
   entry: 'src/app/entry.js',
@@ -96,9 +107,10 @@ tasks
   .set('copy', copy)
   .set('rev', rev)
   .set('server', server)
+  .set('worker', worker)
   .set('sw', sw)
   .set('build', () => run('clean')
-    .then(() => Promise.all([run('client'), run('css'), run('copy'), run('server')]))
+    .then(() => Promise.all([run('client'), run('css'), run('copy'), run('server'), run('worker')]))
     .then(() => run('rev'))
     .then(() => run('sw'))
   )

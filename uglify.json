@@ -8,7 +8,6 @@
     "collapse_vars": true,
     "unsafe": true,
     "warnings": false,
-    "screw_ie8": true,
     "sequences": true,
     "dead_code": true,
     "comparisons": true,

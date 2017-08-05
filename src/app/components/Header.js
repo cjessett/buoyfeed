@@ -17,14 +17,14 @@ const Header = ({ _updateLocation, auth }) => (
           Profile
         </Link>}
       {auth.isAuthenticated() ?
-        <Link className="item" onClick={() => auth.logout()}>Logout</Link> :
-        <Link className="item" onClick={() => auth.login()}>Login</Link>
+        <Link className="item" href="#" onClick={() => auth.logout()}>Logout</Link> :
+        <Link className="item" href="#" onClick={() => auth.login()}>Login</Link>
       }
     </nav>
   </header>
 )
 
 export default connect(
-  null,
+  state => ({ meta: state.meta, auth: state.auth }),
   dispatch => ({ _updateLocation: url => dispatch(updateLocation({ url })) })
 )(Header)

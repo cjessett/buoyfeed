@@ -59,7 +59,7 @@ export default function createFeed({ connection, url }) {
         const { pubDate, title, description, link, guid } = item
         const [N, W] = item['georss:point'][0].split(' ')
         return {
-          id: guid[0]._,
+          guid: guid[0]._.split('-')[1],
           pubDate: pubDate[0],
           title: title[0],
           data: descriptionToData(description[0]),

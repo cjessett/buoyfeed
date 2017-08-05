@@ -32,7 +32,7 @@ export default (state = initialState, { type, payload, id }) => {
     case FETCH_BUOYS_SUCCESS:
       return {
         ...state,
-        collection: payload,
+        collection: payload.buoys,
         hasFetched: true,
         isFetching: false,
         didInvalidate: false,
@@ -43,7 +43,7 @@ export default (state = initialState, { type, payload, id }) => {
       return {
         ...state,
         collection: state.collection.map(b => (
-          b.id === id ? { ...b, isFavorite: !b.isFavorite } : b
+          b.guid === id ? { ...b, isFavorite: !b.isFavorite } : b
         )),
       }
     default:
