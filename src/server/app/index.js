@@ -2,6 +2,7 @@ import { EventEmitter } from 'events'
 import util from 'util'
 import connections from './connections'
 import FeedModel from './feed'
+import UserModel from './user'
 
 function App(config) {
   EventEmitter.call(this)
@@ -16,7 +17,7 @@ util.inherits(App, EventEmitter)
 
 App.prototype.onConnected = function () {
   this.Feed = FeedModel({ connection: this.connections.db, url: this.config.url })
-  console.log('app ready')
+  this.User = UserModel({ connection: this.connections.db })
   this.emit('ready')
 }
 
@@ -31,6 +32,18 @@ App.prototype.updateFeed = function () {
 
 App.prototype.getBuoys = function () {
   return this.Feed.listBuoys()
+}
+
+App.prototype.listFavorites = function (id) {
+  return this.User.listFavorites(id)
+}
+
+App.prototype.addFavorite = function (id, buoy) {
+  return this.User.addFavorite(id, buoy)
+}
+
+App.prototype.removeFavorite = function (id, buoy) {
+  return this.User.removeFavorite(id, buoy)
 }
 
 export default function (config) {

@@ -10,11 +10,15 @@ require('source-map-support').install()
 const instance = app({ mongoConfig, url: FEED_URL })
 
 function createServer() {
-  instance.updateFeed()
-  setInterval(() => instance.updateFeed(), 60 * 10 * 1000)
   const webInstance = web(instance)
 
+  if (process.env.NODE_ENV === 'development') {
+    instance.updateFeed()
+    setInterval(() => instance.updateFeed(), 10 * 60 * 1000)
+  }
+
   const server = webInstance.listen(process.env.PORT || 8080, () => {
+    if (process.env.NODE_ENV === 'production') process.send('ready')
     console.log(`[server] app on http://localhost:${server.address().port} - ${webInstance.settings.env}`)
   })
 

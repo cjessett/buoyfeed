@@ -1,7 +1,16 @@
+require('dotenv').load()
+
 module.exports = {
   apps: [{
-    name: 'buoyfeed',
+    name: 'web',
     script: './build/server.js',
+    wait_ready: true,
+    autorestart: false,
+  }, {
+    name: 'worker',
+    script: './build/worker.js',
+    wait_ready: true,
+    autorestart: false,
   }],
   deploy: {
     production: {
