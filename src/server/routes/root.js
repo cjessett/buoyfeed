@@ -6,7 +6,7 @@ import fetch from 'node-fetch'
 import createStore from './../../app/store/createStore'
 import App from './../../app/components/App'
 import withTimeout from './../../app/utils/withTimeout'
-import { fetchBuoys } from './../../app/store/actions/buoys'
+import { fetchInitialState } from './../../app/store/actions/buoys'
 import { updateLocation } from './../../app/store/actions/meta'
 
 const assets = JSON.parse(readFileSync(`${__dirname}/public/assets.json`))
@@ -48,10 +48,9 @@ export default app => (
     const store = createStore(createPreloadedState(), fetch)
     store.dispatch(updateLocation({ url: req.originalUrl }))
     withTimeout(
-      store.dispatch(fetchBuoys(app.getBuoys())),
-      100 // adjust for optimal threshold
+      store.dispatch(fetchInitialState(app.getBuoys())),
+      100
     )
-    .catch(err => console.log(err))
     .then(() => res.send(createAppShell(store)))
     .catch(err => console.log(err))
   })

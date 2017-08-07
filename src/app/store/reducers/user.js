@@ -15,7 +15,7 @@ export default (state = initialState, { type, payload, id }) => {
     case FETCH_BUOYS_SUCCESS:
       return {
         ...state,
-        favorites: payload.favs,
+        favorites: payload.favs || state.favorites,
       }
     default:
       return state
