@@ -10,7 +10,7 @@ export default function () {
   const auth = new auth0.WebAuth({
     domain: 'cjessett.auth0.com',
     clientID: 'K4rtV9xGOOgcBoqYtq7P35351ygdZTei',
-    redirectUri: 'http://localhost:8080/',
+    redirectUri: 'process.env.REDIRECT_URI',
     audience: 'https://cjessett.auth0.com/userinfo',
     responseType: 'token id_token',
     scope: 'openid',

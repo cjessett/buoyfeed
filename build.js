@@ -47,7 +47,11 @@ const client = () => rollup({
   plugins: [
     nodeResolve({ jsnext: true, browser: true }),
     commonjs(),
-    replace({ '__CLIENT__': true, 'process.env.NODE_ENV': JSON.stringify('production') }),
+    replace({
+      '__CLIENT__': true,
+      'process.env.NODE_ENV': JSON.stringify('production'),
+      'process.env.REDIRECT_URI': process.env.REDIRECT_URI,
+    }),
     buble({ jsx: 'h', objectAssign: 'Object.assign' }),
     uglify(require('./uglify')),
     optimizeJs()
