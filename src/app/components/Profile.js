@@ -9,7 +9,7 @@ export default class Profile extends Component {
   }
 
   componentDidMount() {
-    const { getProfile, login } = this.props.auth
+    const { getProfile } = this.props.auth
     getProfile((err, profile) => {
       if (err) {
         return this.setState({ err })

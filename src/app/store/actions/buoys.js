@@ -1,4 +1,4 @@
-import { getShouldFetchBuoys, getBuoys, getFavorites } from '../selectors/buoys'
+import { getShouldFetchBuoys, getBuoys } from '../selectors/buoys'
 import { getToken } from '../selectors/meta'
 
 export const FETCH_BUOYS = 'api/FETCH_BUOYS'
@@ -21,11 +21,11 @@ const startAction = type => ({ type })
 const successAction = (type, json) => ({ type, payload: json })
 const errorAction = (type, error) => ({ type, payload: error, error: true })
 
-export const fetchBuoys = query => (dispatch, getState, fetchMethod) => {
+export const fetchBuoys = () => (dispatch, getState, fetchMethod) => {
   const token = getToken(getState())
   const headers = token ? { Authorization: `Bearer ${token}` } : {}
   dispatch(startAction(FETCH_BUOYS))
-  return query || fetchMethod('/buoys', { headers })
+  return fetchMethod('/buoys', { headers })
   .then(checkStatus)
   .then(parseJSON)
   .then(({ buoys, favs }) => dispatch(successAction(FETCH_BUOYS_SUCCESS, { buoys, favs })))
@@ -60,3 +60,7 @@ export const favorite = buoy => (dispatch, getState, fetchMethod) => {
   .then(() => dispatch({ id: buoy, type: FAVORITE }))
   .catch(err => dispatch(errorAction(FAVORITE, err)))
 }
+
+export const fetchInitialState = query => dispatch => Promise.all([
+  query.then(buoys => dispatch(successAction(FETCH_BUOYS_SUCCESS, { buoys }))),
+])
