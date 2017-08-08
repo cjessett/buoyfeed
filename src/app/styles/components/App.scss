@@ -23,6 +23,23 @@ body {
 p{
 	margin-bottom: 1em;
 }
+
+.fixed {
+	position: fixed;
+	top: 0;
+}
+
+.content {
+	float: right;
+	display: inline-block;
+	max-width: 75%;
+	margin-right: 3em;
+}
+
+.hide {
+	display: none;
+}
+
 .page {
 	padding: 72px 32px 16px;
 	min-height: 100%;
@@ -34,6 +51,15 @@ p{
 
 .page nav a {
 	display: block;
+}
+@media screen and (max-width:415px) {
+	.content {
+		float: inherit;
+		display: block;
+		margin: inherit;
+		max-width: inherit;
+		margin: 5em 1em 1em 1em;
+	}
 }
 @media screen and (max-width:321px) {
 	.page {

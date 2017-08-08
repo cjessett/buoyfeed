@@ -5,7 +5,7 @@ export default ({ id, title, data, link, isFavorite, handleClick }) => (
     <div className="mdl-card__title">
       <h2 className="mdl-card__title-text" style={{ width: '80%' }}>{title}</h2>
       <button className="mdl-button mdl-button--icon mdl-card__menu">
-        <i class="material-icons" onClick={() => handleClick(id)}>
+        <i className="material-icons" onClick={() => handleClick(id)}>
           {isFavorite ? 'star' : 'star_border'}
         </i>
       </button>
