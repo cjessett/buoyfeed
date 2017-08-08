@@ -2,6 +2,7 @@ import { h, Component } from 'preact' // eslint-disable-line no-unused-vars
 import PreactRedux from 'preact-redux'
 
 import Buoy from './Buoy'
+import Toggle from './Toggle'
 import { fetchBuoys, favorite, fetchFavorites } from './../store/actions/buoys'
 import { setToken } from '../store/actions/meta'
 import { getBuoys } from '../store/selectors/buoys'
@@ -16,6 +17,7 @@ class Home extends Component {
   }
 
   render(props) {
+    const display = props.toggleDisplay
     const buoys = props
     .buoys
     .map(b =>
@@ -28,8 +30,9 @@ class Home extends Component {
         handleClick={props.favorite}
       />)
     return (
-      <div className="Home page">
-        {buoys}
+      <div className="Home">
+        <aside id="toggle" style={{ display }} className="Toggle fixed"><Toggle /></aside>
+        <section className="content">{buoys}</section>
       </div>
     )
   }
@@ -40,6 +43,7 @@ export default connect(
     buoys: getBuoys(state),
     favs: state.user.favorites,
     isAuthenticated: state.auth.isAuthenticated,
+    toggleDisplay: state.meta.toggleDisplay,
   }),
   { fetchBuoys, favorite, fetchFavorites, setToken }
 )(Home)
