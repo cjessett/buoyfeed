@@ -1,4 +1,4 @@
-import { FETCH_BUOYS, FETCH_BUOYS_SUCCESS, FETCH_BUOYS_ERROR, INVALIDATE_FETCH_BUOYS, FAVORITE } from './../actions/buoys'
+import { FETCH_BUOYS, FETCH_BUOYS_SUCCESS, FETCH_BUOYS_ERROR, INVALIDATE_FETCH_BUOYS, FAVORITE, TOGGLE_FILTER } from './../actions/buoys'
 
 export const initialState = {
   didInvalidate: false,
@@ -7,6 +7,7 @@ export const initialState = {
   hasError: false,
   error: null,
   collection: [],
+  onlyFavs: false,
 }
 
 export default (state = initialState, { type, payload, id }) => {
@@ -46,6 +47,8 @@ export default (state = initialState, { type, payload, id }) => {
           b.guid === id ? { ...b, isFavorite: !b.isFavorite } : b
         )),
       }
+    case TOGGLE_FILTER:
+      return { ...state, onlyFavs: !state.onlyFavs }
     default:
       return state
   }

@@ -3,9 +3,10 @@ import PreactRedux from 'preact-redux'
 
 import Buoy from './Buoy'
 import Toggle from './Toggle'
-import { fetchBuoys, favorite, fetchFavorites } from './../store/actions/buoys'
+import { fetchBuoys, favorite, fetchFavorites, toggleFilter } from './../store/actions/buoys'
 import { setToken } from '../store/actions/meta'
 import { getBuoys } from '../store/selectors/buoys'
+import { getFavs } from '../store/selectors/user'
 
 const { connect } = PreactRedux
 
@@ -31,7 +32,9 @@ class Home extends Component {
       />)
     return (
       <div className="Home">
-        <aside id="toggle" style={{ display }} className="Toggle fixed"><Toggle /></aside>
+        <aside id="toggle" style={{ display }} className="Toggle fixed">
+          <Toggle handleToggle={props.toggleFilter} checked={props.onlyFavs} />
+        </aside>
         <section className="content">{buoys}</section>
       </div>
     )
@@ -40,10 +43,12 @@ class Home extends Component {
 
 export default connect(
   state => ({
-    buoys: getBuoys(state),
-    favs: state.user.favorites,
+    buoys: getBuoys(state)
+    .filter(b => (state.buoys.onlyFavs ? getFavs(state).includes(b.guid) : b)),
+    favs: getFavs(state),
     isAuthenticated: state.auth.isAuthenticated,
     toggleDisplay: state.meta.toggleDisplay,
+    onlyFavs: state.buoys.onlyFavs,
   }),
-  { fetchBuoys, favorite, fetchFavorites, setToken }
+  { fetchBuoys, favorite, fetchFavorites, setToken, toggleFilter }
 )(Home)
