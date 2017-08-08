@@ -7,6 +7,7 @@ export const FETCH_BUOYS_ERROR = 'api/FETCH_BUOYS_ERROR'
 export const INVALIDATE_FETCH_BUOYS = 'api/INVALIDATE_FETCH_BUOYS'
 export const FAVORITE = 'FAVORITE'
 export const FETCH_FAVORITES = 'FETCH_FAVORITES'
+export const TOGGLE_FILTER = 'TOGGLE_FILTER'
 
 const checkStatus = (response) => {
   if (!response.ok) { // status in the range 200-299 or not
@@ -64,3 +65,5 @@ export const favorite = buoy => (dispatch, getState, fetchMethod) => {
 export const fetchInitialState = query => dispatch => Promise.all([
   query.then(buoys => dispatch(successAction(FETCH_BUOYS_SUCCESS, { buoys }))),
 ])
+
+export const toggleFilter = () => dispatch => dispatch({ type: TOGGLE_FILTER })
