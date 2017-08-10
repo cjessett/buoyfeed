@@ -1,18 +1,5 @@
-# [preact-pwa](https://preact-pwa-yfxiijbzit.now.sh/)
+# [BuoyFeed](https://buoyfeed.cjessett.com/)
 
-A `Super fast progressive web app` with a small footprint & minimal dependencies.  
-
-Features universal rendering, redux, state-driven routing, preact, & service workers.  Crunched & optimized with rollup, buble, optimize-js, & purify-css.
-
-Live version (zeit): [https://preact-pwa-yfxiijbzit.now.sh/](https://preact-pwa-yfxiijbzit.now.sh/)
-
-## bundle sizes & performance
-```
-Bundle Size:            28.63 KB, 9.64 KB Gzipped
-Webpage test:           A, A, A
-pagespeed:              100
-lighthouse:             100
-```
 
 ## Getting Started
 
@@ -22,19 +9,22 @@ Make sure that [Node v7](https://nodejs.org/en/download/releases/) is installed.
 
 Make sure that [yarn](https://github.com/yarnpkg/yarn) is installed.
 
+Also, [mongodb](https://www.mongodb.com/download-center#community). ([On a mac with brew](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/))
+
 ### Instructions
 
-First, clone the repo
+Clone the repo
 
 ```bash
-$ git clone https://github.com/ezekielchentnik/preact-pwa
+$ git clone https://github.com/cjessett/buoyfeed
 ```
 
-Then, install all dependencies:
+Install dependencies:
 
 ```bash
 $ yarn
 ```
+Make sure mongodb is running. ([with brew](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/#run-mongodb))
 
 Finally, to run the project for development:
 
@@ -45,21 +35,31 @@ $ yarn dev
 Or, to run the project for production:
 
 ```bash
+$ yarn build
 $ yarn start
 ```
 
-## performance insights (note: incomplete)
+## Architecture
+ Bootstrapped with [preact-pwa](https://github.com/ezekielchentnik/preact-pwa).
 
-### manifest.json
+A `Super fast progressive web app` with a small footprint & minimal dependencies.
+
+Features universal rendering, redux, state-driven routing, preact, & service workers.  Crunched & optimized with rollup, buble, optimize-js, & purify-css.
+
+pm2, redux-offline
+
+### performance insights (note: incomplete)
+
+#### manifest.json
 
 Using 192x192 for minimum sized icon, omitting other sizes to reduce downloads for users
 [reference](https://developers.google.com/web/updates/2015/10/splashscreen)
 
-### libraries
+#### libraries
 
 - we can shave off ~10 KB, ~3kb Gzipped by pruning `preact-redux` & manually connecting
 
-## Features
+#### Features
 
 - Progressive Web App enabled with [service workers](https://developers.google.com/web/fundamentals/getting-started/primers/service-workers)
 - Offline capable with [service workers](https://developers.google.com/web/fundamentals/getting-started/primers/service-workers)
