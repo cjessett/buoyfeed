@@ -4,7 +4,6 @@ import { setToken, updateLocation } from '../store/actions/meta'
 import { getPathname, getHash } from './../store/selectors/meta'
 import Header from './Header'
 import Home from './Home'
-import Profile from './Profile'
 import FourOhFour from './FourOhFour'
 // import Auth from '../modules/auth'
 import history from '../modules/history'
@@ -19,12 +18,10 @@ const Content = connect(
   }),
   { setToken, updateLocation }
 )((props) => { // todo: make routing more robust
-  if (props.pathname === '/profile') {
-    return props.auth.isAuthenticated() ? <Profile auth={props.auth} /> : <Home />
-  } else if (props.pathname === '/') {
+  if (props.pathname === '/') {
     if (/access_token|id_token|error/.test(props.hash)) {
       props.auth.handleAuthentication()
-      .then(({ accessToken }) => props.setToken(accessToken))
+      .then(({ idToken }) => props.setToken(idToken))
       .then(() => history.replace('/'))
     }
     return <Home />

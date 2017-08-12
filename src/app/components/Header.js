@@ -11,11 +11,6 @@ const Header = ({ _updateLocation, auth }) => (
       <Link className="item" href="/" onClick={() => _updateLocation('/')}>Buoy Feed</Link>
     </h1>
     <nav>
-      <Link className="item" href="/" onClick={() => _updateLocation('/')}>Home</Link>
-      {auth.isAuthenticated() &&
-        <Link className="item" href="/profile" onClick={() => _updateLocation('/profile')}>
-          Profile
-        </Link>}
       {auth.isAuthenticated() ?
         <Link className="item" href="#" onClick={() => auth.logout()}>Logout</Link> :
         <Link className="item" href="#" onClick={() => auth.login()}>Login</Link>

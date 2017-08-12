@@ -8,6 +8,15 @@ export const INVALIDATE_FETCH_BUOYS = 'api/INVALIDATE_FETCH_BUOYS'
 export const FAVORITE = 'FAVORITE'
 export const FETCH_FAVORITES = 'FETCH_FAVORITES'
 export const TOGGLE_FILTER = 'TOGGLE_FILTER'
+export const FAVORITE_ROLLBACK = 'FAVORITE_ROLLBACK'
+
+const buildHeaders = token => (
+  {
+    Authorization: token ? `Bearer ${token}` : '',
+    Accept: 'application/json',
+    'content-type': 'application/json',
+  }
+)
 
 const checkStatus = (response) => {
   if (!response.ok) { // status in the range 200-299 or not
@@ -45,21 +54,24 @@ export const fetchBuoysIfNeeded = () => (dispatch, getState) => {
   return getShouldFetchBuoys(state) ? dispatch(fetchBuoys()) : Promise.resolve(getBuoys(state))
 }
 
-export const favorite = buoy => (dispatch, getState, fetchMethod) => {
-  const { auth } = getState()
+export const fav = (buoy, method, headers) => ({
+  type: FAVORITE,
+  payload: { buoy },
+  meta: {
+    offline: {
+      effect: { method, headers, url: '/favorites', body: JSON.stringify({ buoy }) },
+      commit: { type: 'COMMITTING' },
+      rollback: { type: FAVORITE_ROLLBACK, meta: { buoy } },
+    },
+  },
+})
+
+export const offlineFav = buoy => (dispatch, getState) => {
+  const { auth, user: { favorites } } = getState()
   if (!auth.isAuthenticated()) return auth.login()
-  const method = getState().user.favorites.includes(buoy) ? 'delete' : 'post'
-  const token = getToken(getState())
-  const headers = {
-    Authorization: token ? `Bearer ${token}` : '',
-    Accept: 'application/json',
-    'content-type': 'application/json',
-  }
-  dispatch(startAction(FAVORITE))
-  return fetchMethod('/favorites', { method, body: JSON.stringify({ buoy }), headers })
-  .then(checkStatus)
-  .then(() => dispatch({ id: buoy, type: FAVORITE }))
-  .catch(err => dispatch(errorAction(FAVORITE, err)))
+  const method = favorites.includes(buoy) ? 'DELETE' : 'POST'
+  const headers = buildHeaders(getToken(getState()))
+  return dispatch(fav(buoy, method, headers))
 }
 
 export const fetchInitialState = query => dispatch => Promise.all([
