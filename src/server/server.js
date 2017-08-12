@@ -12,7 +12,7 @@ const instance = app({ mongoConfig, url: FEED_URL })
 function createServer() {
   const webInstance = web(instance)
 
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV !== 'production') {
     instance.updateFeed()
     setInterval(() => instance.updateFeed(), 10 * 60 * 1000)
   }

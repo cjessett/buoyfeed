@@ -26,6 +26,19 @@ $ yarn
 ```
 Make sure mongodb is running. ([with brew](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/#run-mongodb))
 
+Set up API authorization through [Auth0](https://auth0.com/docs/quickstart/backend/nodejs). Also, [client authorization](https://auth0.com/docs/quickstart/spa/react).
+
+You can set the variables in the environment through dotenv by creating a `.env` file:
+```
+// .env
+AUDIENCE='{YOUR_API_IDENTIFIER}'
+ISSUER=`https://YOUR_AUTH0_DOMAIN/`
+
+CLIENT_ID='YOUR_CLIENT_ID'
+AUTH0_DOMAIN='YOUR_AUTH0_DOMAIN'
+REDIRECT_URI='http://localhost:8080'
+```
+
 Finally, to run the project for development:
 
 ```bash
