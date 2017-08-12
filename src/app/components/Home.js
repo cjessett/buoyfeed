@@ -3,7 +3,7 @@ import PreactRedux from 'preact-redux'
 
 import Buoy from './Buoy'
 import Toggle from './Toggle'
-import { fetchBuoys, favorite, fetchFavorites, toggleFilter } from './../store/actions/buoys'
+import { fetchBuoys, offlineFav, fetchFavorites, toggleFilter } from './../store/actions/buoys'
 import { setToken } from '../store/actions/meta'
 import { getBuoys } from '../store/selectors/buoys'
 import { getFavs } from '../store/selectors/user'
@@ -14,7 +14,6 @@ class Home extends Component {
   componentDidMount() {
     this.props.setToken(localStorage.getItem('id_token'))
     this.props.fetchBuoys()
-    // if (this.props.isAuthenticated()) this.props.fetchFavorites()
   }
 
   render(props) {
@@ -28,7 +27,7 @@ class Home extends Component {
         data={b.data}
         link={b.link}
         isFavorite={props.favs.includes(b.guid)}
-        handleClick={props.favorite}
+        handleClick={props.offlineFav}
       />)
     return (
       <div className="Home">
@@ -43,12 +42,13 @@ class Home extends Component {
 
 export default connect(
   state => ({
-    buoys: getBuoys(state)
-    .filter(b => (state.buoys.onlyFavs ? getFavs(state).includes(b.guid) : b)),
+    buoys: state.buoys.onlyFavs ?
+      getBuoys(state).filter(b => getFavs(state).includes(b.guid)) :
+      getBuoys(state),
     favs: getFavs(state),
     isAuthenticated: state.auth.isAuthenticated,
     toggleDisplay: state.meta.toggleDisplay,
     onlyFavs: state.buoys.onlyFavs,
   }),
-  { fetchBuoys, favorite, fetchFavorites, setToken, toggleFilter }
+  { fetchBuoys, offlineFav, fetchFavorites, setToken, toggleFilter }
 )(Home)
