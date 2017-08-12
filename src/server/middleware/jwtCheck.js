@@ -4,11 +4,11 @@ import jwks from 'jwks-rsa'
 export default (credentialsRequired = true) => jwt({
   secret: jwks.expressJwtSecret({
     cache: true,
-    jwksUri: process.env.JWKS_URI,
+    jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`,
   }),
   credentialsRequired,
   // Validate the audience and the issuer.
   aud: process.env.AUDIENCE,
-  issuer: process.env.ISSUER,
+  issuer: `https://${process.env.AUTH0_DOMAIN}/`,
   algorithms: ['RS256'],
 })

@@ -31,8 +31,7 @@ Set up API authorization through [Auth0](https://auth0.com/docs/quickstart/backe
 You can set the variables in the environment through dotenv by creating a `.env` file:
 ```
 // .env
-AUDIENCE='{YOUR_API_IDENTIFIER}'
-ISSUER=`https://YOUR_AUTH0_DOMAIN/`
+AUDIENCE='localhost:8080'
 
 CLIENT_ID='YOUR_CLIENT_ID'
 AUTH0_DOMAIN='YOUR_AUTH0_DOMAIN'
