@@ -51,6 +51,8 @@ const client = () => rollup({
       '__CLIENT__': true,
       'process.env.NODE_ENV': JSON.stringify('production'),
       'process.env.REDIRECT_URI': process.env.REDIRECT_URI,
+      'process.env.CLIENT_ID': process.env.CLIENT_ID,
+      'process.env.AUTH0_DOMAIN': process.env.AUTH0_DOMAIN,
     }),
     buble({ jsx: 'h', objectAssign: 'Object.assign' }),
     uglify(require('./uglify')),

@@ -8,10 +8,10 @@ export default function () {
   // this.handleAuthentication = this.handleAuthentication.bind(this)
   // this.getProfile = this.getProfile.bind(this)
   const auth = new auth0.WebAuth({
-    domain: 'cjessett.auth0.com',
-    clientID: 'K4rtV9xGOOgcBoqYtq7P35351ygdZTei',
+    domain: 'process.env.AUTH0_DOMAIN',
+    clientID: 'process.env.CLIENT_ID',
     redirectUri: 'process.env.REDIRECT_URI',
-    audience: 'https://cjessett.auth0.com/userinfo',
+    audience: 'https://process.env.AUTH0_DOMAIN/userinfo',
     responseType: 'token id_token',
     scope: 'openid',
   })
