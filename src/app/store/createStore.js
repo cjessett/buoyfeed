@@ -6,6 +6,7 @@ import defaultConfig from 'redux-offline/lib/defaults'
 import persistStore from 'redux-offline/lib/defaults/persist'
 
 import rootReducer from './reducers/rootReducer'
+import IS_CLIENT from '../utils/isClient'
 
 // we pass fetch so that we can use global on window, node-fetch on server
 export default (initialState, fetchMethod) => {
@@ -14,7 +15,7 @@ export default (initialState, fetchMethod) => {
   })
   const enhancer = compose(
       applyMiddleware(thunk.withExtraArgument(fetchMethod)),
-      devToolsEnhancer(),
+      IS_CLIENT && window.__REDUX_DEVTOOLS_EXTENSION__ ? devToolsEnhancer() : f => f,
       offline(config)
   )
   return createStore(rootReducer, initialState, enhancer)

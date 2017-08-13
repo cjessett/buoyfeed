@@ -1,5 +1,3 @@
-require('dotenv').load()
-
 module.exports = {
   apps: [{
     name: 'web',

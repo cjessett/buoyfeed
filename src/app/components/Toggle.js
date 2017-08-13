@@ -5,7 +5,7 @@ export default ({ handleToggle, checked }) => (
     <li className="tg-list-item">
       <i className="material-icons">list</i>
       <input
-        id='tggl'
+        id="tggl"
         className="tgl tgl-ios"
         type="checkbox"
         checked={checked}
