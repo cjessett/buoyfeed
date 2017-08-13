@@ -16,7 +16,7 @@ const { name, dependencies } = require('./package')
 const swPrecache = require('sw-precache').write
 const nodeRev = require('node-rev').default
 
-const mdl = fs.readFileSync('node_modules/material-design-lite/material.min.css', 'utf-8');
+const mdl = fs.readFileSync('node_modules/material-design-lite/material.min.css', 'utf-8')
 const sourceMap = process.env.NODE_ENV === 'development'
 
 const server = () => rollup({

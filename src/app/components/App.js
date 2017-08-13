@@ -5,7 +5,6 @@ import { getPathname, getHash } from './../store/selectors/meta'
 import Header from './Header'
 import Home from './Home'
 import FourOhFour from './FourOhFour'
-// import Auth from '../modules/auth'
 import history from '../modules/history'
 
 const { Provider, connect } = PreactRedux

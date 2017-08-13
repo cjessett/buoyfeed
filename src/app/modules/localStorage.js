@@ -13,6 +13,9 @@ export default () => {
         _localStorage[key] = val
         return undefined
       },
+      clear() {
+        Object.keys(_localStorage).forEach(key => delete _localStorage[key])
+      },
     },
   }
 }

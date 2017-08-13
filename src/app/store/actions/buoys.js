@@ -42,13 +42,6 @@ export const fetchBuoys = () => (dispatch, getState, fetchMethod) => {
   .catch(error => dispatch(errorAction(FETCH_BUOYS_ERROR, error)))
 }
 
-export const fetchFavorites = () => (dispatch, getState, fetchMethod) => {
-  const token = getToken(getState())
-  const headers = token ? { Authorization: `Bearer ${token}` } : {}
-  dispatch(startAction(FETCH_FAVORITES))
-  return fetchMethod('/favorites', { headers })
-}
-
 export const fetchBuoysIfNeeded = () => (dispatch, getState) => {
   const state = getState()
   return getShouldFetchBuoys(state) ? dispatch(fetchBuoys()) : Promise.resolve(getBuoys(state))

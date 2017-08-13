@@ -3,7 +3,7 @@ import PreactRedux from 'preact-redux'
 
 import Buoy from './Buoy'
 import Toggle from './Toggle'
-import { fetchBuoys, offlineFav, fetchFavorites, toggleFilter } from './../store/actions/buoys'
+import { fetchBuoys, offlineFav, toggleFilter } from './../store/actions/buoys'
 import { setToken } from '../store/actions/meta'
 import { getBuoys } from '../store/selectors/buoys'
 import { getFavs } from '../store/selectors/user'
@@ -50,5 +50,5 @@ export default connect(
     toggleDisplay: state.meta.toggleDisplay,
     onlyFavs: state.buoys.onlyFavs,
   }),
-  { fetchBuoys, offlineFav, fetchFavorites, setToken, toggleFilter }
+  { fetchBuoys, offlineFav, setToken, toggleFilter }
 )(Home)

@@ -5,8 +5,6 @@ import mockStorage from './localStorage'
 const localStorage = mockStorage().localStorage
 
 export default function () {
-  // this.handleAuthentication = this.handleAuthentication.bind(this)
-  // this.getProfile = this.getProfile.bind(this)
   const auth = new auth0.WebAuth({
     domain: 'process.env.AUTH0_DOMAIN',
     clientID: 'process.env.CLIENT_ID',
@@ -40,16 +38,11 @@ export default function () {
       localStorage.setItem('access_token', authResult.accessToken)
       localStorage.setItem('id_token', authResult.idToken)
       localStorage.setItem('expires_at', expiresAt)
-      // navigate to the home route
-      // history.replace('/')
     },
 
     logout() {
       // Clear access token and ID token from local storage
-      localStorage.removeItem('access_token')
-      localStorage.removeItem('id_token')
-      localStorage.removeItem('expires_at')
-      // navigate to the home route
+      localStorage.clear()
       history.replace('/')
     },
 

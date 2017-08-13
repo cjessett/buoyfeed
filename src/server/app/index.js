@@ -15,6 +15,7 @@ function App(config) {
 
 util.inherits(App, EventEmitter)
 
+// Connections
 App.prototype.onConnected = function () {
   this.Feed = FeedModel({ connection: this.connections.db, url: this.config.url })
   this.User = UserModel({ connection: this.connections.db })
@@ -26,6 +27,7 @@ App.prototype.onLost = function () {
   this.emit('lost')
 }
 
+// Feed
 App.prototype.updateFeed = function () {
   this.Feed.pullFeed()
 }
@@ -34,6 +36,7 @@ App.prototype.getBuoys = function () {
   return this.Feed.listBuoys()
 }
 
+// User
 App.prototype.listFavorites = function (id) {
   return this.User.listFavorites(id)
 }

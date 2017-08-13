@@ -54,22 +54,11 @@ $ yarn start
 ## Architecture
  Bootstrapped with [preact-pwa](https://github.com/ezekielchentnik/preact-pwa).
 
-A `Super fast progressive web app` with a small footprint & minimal dependencies.
+A `Super fast progressive web app` with a small footprint.
 
-Features universal rendering, redux, state-driven routing, preact, & service workers.  Crunched & optimized with rollup, buble, optimize-js, & purify-css.
-
-pm2, redux-offline
-
-### performance insights (note: incomplete)
-
-#### manifest.json
-
-Using 192x192 for minimum sized icon, omitting other sizes to reduce downloads for users
-[reference](https://developers.google.com/web/updates/2015/10/splashscreen)
-
-#### libraries
-
-- we can shave off ~10 KB, ~3kb Gzipped by pruning `preact-redux` & manually connecting
+Features universal rendering, redux, state-driven routing, preact, & service workers.
+Offline support with redux-offline.
+Crunched & optimized with rollup, buble, optimize-js, & purify-css.
 
 #### Features
 
