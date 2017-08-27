@@ -1,7 +1,9 @@
 import { FETCH_BUOYS_SUCCESS, FAVORITE, FAVORITE_ROLLBACK } from './../actions/buoys'
+import { LOGIN, LOGOUT } from '../actions/auth'
 
 export const initialState = {
   favorites: [],
+  id: '',
 }
 
 export default (state = initialState, { type, payload }) => {
@@ -19,6 +21,10 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         favorites: payload.favs || state.favorites,
       }
+    case LOGIN:
+      return { ...state, id: payload.id }
+    case LOGOUT:
+      return initialState
     default:
       return state
   }

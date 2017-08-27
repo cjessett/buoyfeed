@@ -4,11 +4,13 @@ import { setToken, updateLocation } from '../store/actions/meta'
 import { getPathname, getHash } from './../store/selectors/meta'
 import Header from './Header'
 import Home from './Home'
+import Auth from './Auth'
 import FourOhFour from './FourOhFour'
-import history from '../modules/history'
+// import history from '../modules/history'
 
 const { Provider, connect } = PreactRedux
 
+/* eslint-disable */
 const Content = connect(
   state => ({
     pathname: getPathname(state),
@@ -17,16 +19,9 @@ const Content = connect(
   }),
   { setToken, updateLocation }
 )((props) => { // todo: make routing more robust
-  if (props.pathname === '/') {
-    if (/access_token|id_token|error/.test(props.hash)) {
-      props.auth.handleAuthentication()
-      .then(({ idToken }) => props.setToken(idToken))
-      .then(() => history.replace('/'))
-    }
-    return <Home />
-  } else {
-    return <FourOhFour />
-  }
+  if (props.pathname === '/') return <Home />
+  else if (/signup|login/.test(props.pathname)) return <Auth />
+  return <FourOhFour />
 })
 
 export default ({ store }) => (

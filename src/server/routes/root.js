@@ -21,7 +21,7 @@ const AppShell = ({ html, state }) => `<!DOCTYPE html>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#673ab8">
+    <meta name="theme-color" content="#002b49">
     <link rel="manifest" href="${manifestUrl}">
     <link rel="dns-prefetch" href="https://jsonplaceholder.typicode.com">
     <link rel="shortcut icon"type="image/x-icon" href="data:image/x-icon;,">
@@ -46,6 +46,7 @@ const createAppShell = (store) => {
 export default app => (
   Router().get('/', (req, res) => {
     const store = createStore(createPreloadedState(), fetch)
+    console.log('og', req.originalUrl)
     store.dispatch(updateLocation({ url: req.originalUrl }))
     withTimeout(
       store.dispatch(fetchInitialState(app.getBuoys())),
