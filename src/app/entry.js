@@ -4,7 +4,7 @@ import App from './components/App'
 import createStore from './store/createStore'
 import { fetchBuoysIfNeeded } from './store/actions/buoys'
 import { updateLocation, HIDE_TOGGLE, SHOW_TOGGLE } from './store/actions/meta'
-import { getUrl, getHash } from './store/selectors/meta'
+import { getUrl } from './store/selectors/meta'
 import ensurePolyfills from './utils/ensurePolyfills'
 
 const app = document.getElementById('app')
@@ -16,8 +16,7 @@ ensurePolyfills(() => {
 
   window.addEventListener('popstate', (e) => {
     const url = window.location.pathname + window.location.search
-    const hash = window.location.hash
-    store.dispatch(updateLocation({ url, hash }))
+    store.dispatch(updateLocation({ url }))
   })
   document.addEventListener('touchstart', (e) => {
     ts = e.touches[0].clientY
@@ -33,14 +32,12 @@ ensurePolyfills(() => {
 
   store.subscribe(() => {
     const url = getUrl(store.getState())
-    const hash = getHash(store.getState())
     if (window.location.pathname + window.location.search !== url) {
       window.history.pushState({}, '', url)
     }
   })
   store.dispatch(updateLocation({
     url: window.location.pathname + window.location.search,
-    hash: window.location.hash,
   }))
   store.dispatch(fetchBuoysIfNeeded())
   render(<App store={store} />, app, app.lastChild)

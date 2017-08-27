@@ -37,6 +37,14 @@ App.prototype.getBuoys = function () {
 }
 
 // User
+App.prototype.createUser = function (creds) {
+  return this.User.create(creds)
+}
+
+App.prototype.authenticate = function (creds) {
+  return this.User.authenticate(creds)
+}
+
 App.prototype.listFavorites = function (id) {
   return this.User.listFavorites(id)
 }

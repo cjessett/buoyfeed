@@ -1,0 +1,30 @@
+.Auth {
+  margin: 5em auto;
+  display: flex;
+  flex-direction: column;
+
+  input {
+    line-height: 1.5;
+    font-size: 1.5em;
+    margin: 0.25em;
+    padding: 0.25em;
+  }
+
+  button {
+    padding: 1em;
+    cursor: pointer;
+  }
+
+  .flex { display: flex; }
+
+  .mode {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+  }
+
+  .mode:hover { text-decoration: underline;}
+
+  .left { margin-right: 2em; }
+  .right { margin-left: 2em; }
+}

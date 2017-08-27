@@ -2,7 +2,7 @@ import { Router } from 'express'
 
 export default (app) => {
   function addFavorite(req, res) {
-    const { sub: id } = req.user
+    const { user: id } = req.session
     app.addFavorite(id, req.body.buoy)
     .then(() => res.sendStatus(200))
     .catch((err) => {
@@ -11,7 +11,7 @@ export default (app) => {
   }
 
   function removeFavorite(req, res) {
-    const { sub: id } = req.user
+    const { user: id } = req.session
     app.removeFavorite(id, req.body.buoy)
     .then(() => res.sendStatus(200))
     .catch((err) => {

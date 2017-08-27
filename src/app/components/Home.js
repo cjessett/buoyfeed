@@ -3,8 +3,7 @@ import PreactRedux from 'preact-redux'
 
 import Buoy from './Buoy'
 import Toggle from './Toggle'
-import { fetchBuoys, offlineFav, toggleFilter } from './../store/actions/buoys'
-import { setToken } from '../store/actions/meta'
+import { fetchBuoys, offlineFav, toggleFilter } from '../store/actions/buoys'
 import { getBuoys } from '../store/selectors/buoys'
 import { getFavs } from '../store/selectors/user'
 
@@ -12,7 +11,6 @@ const { connect } = PreactRedux
 
 class Home extends Component {
   componentDidMount() {
-    this.props.setToken(localStorage.getItem('id_token'))
     this.props.fetchBuoys()
   }
 
@@ -46,9 +44,8 @@ export default connect(
       getBuoys(state).filter(b => getFavs(state).includes(b.guid)) :
       getBuoys(state),
     favs: getFavs(state),
-    isAuthenticated: state.auth.isAuthenticated,
     toggleDisplay: state.meta.toggleDisplay,
     onlyFavs: state.buoys.onlyFavs,
   }),
-  { fetchBuoys, offlineFav, setToken, toggleFilter }
+  { fetchBuoys, offlineFav, toggleFilter }
 )(Home)

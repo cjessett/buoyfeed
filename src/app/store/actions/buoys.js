@@ -1,5 +1,6 @@
 import { getShouldFetchBuoys, getBuoys } from '../selectors/buoys'
 import { getToken } from '../selectors/meta'
+import { updateLocation } from './meta'
 
 export const FETCH_BUOYS = 'api/FETCH_BUOYS'
 export const FETCH_BUOYS_SUCCESS = 'api/FETCH_BUOYS_SUCCESS'
@@ -17,6 +18,7 @@ const buildHeaders = token => (
     'content-type': 'application/json',
   }
 )
+const credentials = 'include'
 
 const checkStatus = (response) => {
   if (!response.ok) { // status in the range 200-299 or not
@@ -35,7 +37,7 @@ export const fetchBuoys = () => (dispatch, getState, fetchMethod) => {
   const token = getToken(getState())
   const headers = token ? { Authorization: `Bearer ${token}` } : {}
   dispatch(startAction(FETCH_BUOYS))
-  return fetchMethod('/buoys', { headers })
+  return fetchMethod('/buoys', { headers, credentials })
   .then(checkStatus)
   .then(parseJSON)
   .then(({ buoys, favs }) => dispatch(successAction(FETCH_BUOYS_SUCCESS, { buoys, favs })))
@@ -52,7 +54,7 @@ export const fav = (buoy, method, headers) => ({
   payload: { buoy },
   meta: {
     offline: {
-      effect: { method, headers, url: '/favorites', body: JSON.stringify({ buoy }) },
+      effect: { method, headers, credentials, url: '/favorites', body: JSON.stringify({ buoy }) },
       commit: { type: 'COMMITTING' },
       rollback: { type: FAVORITE_ROLLBACK, meta: { buoy } },
     },
@@ -60,8 +62,8 @@ export const fav = (buoy, method, headers) => ({
 })
 
 export const offlineFav = buoy => (dispatch, getState) => {
-  const { auth, user: { favorites } } = getState()
-  if (!auth.isAuthenticated()) return auth.login()
+  const { user: { favorites, id } } = getState()
+  if (!id) return dispatch(updateLocation({ url: '/login' }))
   const method = favorites.includes(buoy) ? 'DELETE' : 'POST'
   const headers = buildHeaders(getToken(getState()))
   return dispatch(fav(buoy, method, headers))
