@@ -10,7 +10,9 @@ import { root, buoys, favorites, auth } from './routes'
 const RedisStore = redis(session)
 
 export default (app) => {
-  const store = process.env.NODE_ENV === 'production' ? new RedisStore() : undefined
+  const store = process.env.NODE_ENV === 'production' ?
+    new RedisStore({ host: process.env.REDIS_HOST, port: process.env.REDIS_PORT }) :
+    undefined
   const secret = process.env.SESSION_SECRET || 'waves'
   // likely our proxy will handle compression, cache-control, etc. these are healthy defaults
   const web = express()
