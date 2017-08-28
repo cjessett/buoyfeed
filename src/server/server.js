@@ -13,8 +13,9 @@ function createServer() {
   const webInstance = web(instance)
 
   if (process.env.NODE_ENV !== 'production') {
+    const refreshInterval = process.env.REFRESH_INTERVAL || 20
     instance.updateFeed()
-    setInterval(() => instance.updateFeed(), 10 * 60 * 1000)
+    setInterval(() => instance.updateFeed(), refreshInterval * 60 * 1000)
   }
 
   const server = webInstance.listen(process.env.PORT || 8080, () => {
