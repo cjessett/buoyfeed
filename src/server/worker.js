@@ -13,6 +13,7 @@ http.globalAgent.maxSockets = Infinity
 
 function start() {
   const instance = app({ mongoConfig, url: FEED_URL })
+  const refreshInterval = process.env.FEED_REFRESH_INTERVAL || 20
 
   console.log({ type: 'info', msg: 'starting worker' })
 
@@ -25,7 +26,7 @@ function start() {
     if (process.env.NODE_ENV === 'production') process.send('ready')
     instance.on('lost', shutdown)
     instance.updateFeed()
-    setInterval(() => instance.updateFeed(), 10 * 60 * 1000)
+    setInterval(() => instance.updateFeed(), refreshInterval * 60 * 1000)
   }
 
   instance.on('ready', beginWork)
