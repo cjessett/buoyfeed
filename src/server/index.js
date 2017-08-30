@@ -1,9 +1,9 @@
+require('dotenv').load()
+/* eslint-disable import/first */
 import web from './web'
 import app from './app'
 import { FEED_URL } from './constants'
 import mongoConfig from './mongoConfig'
-
-require('dotenv').load()
 
 require('source-map-support').install()
 
