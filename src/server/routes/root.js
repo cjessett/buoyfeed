@@ -2,7 +2,6 @@ import { h } from 'preact' // eslint-disable-line no-unused-vars
 import render from 'preact-render-to-string'
 import { readFileSync } from 'fs'
 import { Router } from 'express'
-import fetch from 'node-fetch'
 import createStore from './../../app/store/createStore'
 import App from './../../app/components/App'
 import withTimeout from './../../app/utils/withTimeout'
@@ -35,8 +34,6 @@ const AppShell = ({ html, state }) => `<!DOCTYPE html>
   </body>
 </html>`
 
-const createPreloadedState = () => ({})
-
 const createAppShell = (store) => {
   const state = store.getState()
   const html = render(<App store={store} />)
@@ -45,13 +42,10 @@ const createAppShell = (store) => {
 
 export default app => (
   Router().get('/', (req, res) => {
-    const store = createStore(createPreloadedState(), fetch)
-    console.log('og', req.originalUrl)
-    store.dispatch(updateLocation({ url: req.originalUrl }))
-    withTimeout(
-      store.dispatch(fetchInitialState(app.getBuoys())),
-      100
-    )
+    const store = createStore()
+    store.dispatch(updateLocation(req.originalUrl))
+
+    withTimeout(store.dispatch(fetchInitialState(app.getBuoys())), 100)
     .then(() => res.send(createAppShell(store)))
     .catch(err => console.log(err))
   })

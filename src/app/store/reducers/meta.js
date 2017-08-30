@@ -1,18 +1,12 @@
-import { UPDATE_LOCATION, SET_TOKEN, REMOVE_TOKEN, HIDE_TOGGLE, SHOW_TOGGLE } from './../actions/meta'
+import { UPDATE_LOCATION, HIDE_TOGGLE, SHOW_TOGGLE } from './../actions/meta'
 
 export const initialState = {
   url: '/',
-  hash: '',
-  token: '',
   toggleDisplay: 'initial',
 }
 
-export default (state = initialState, { type, payload, token }) => {
+export default (state = initialState, { type, payload }) => {
   switch (type) {
-    case SET_TOKEN:
-      return { ...state, token }
-    case REMOVE_TOKEN:
-      return { ...state, token: '' }
     case UPDATE_LOCATION:
       return { ...state, ...payload }
     case HIDE_TOGGLE:

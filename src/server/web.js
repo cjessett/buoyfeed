@@ -15,7 +15,6 @@ export default (app) => {
   web.use(serveStatic()) // immutable static content
   web.use(cacheControl()) // cache control for the rest
   web.use(bodyParser.json())
-  web.use(bodyParser.urlencoded({ extended: true }))
   web.use(morgan('dev'))
   web.use(session)
   web.use('/auth', auth(app))
