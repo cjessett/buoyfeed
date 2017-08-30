@@ -3,9 +3,9 @@ import PreactRedux from 'preact-redux'
 
 import Buoy from './Buoy'
 import Toggle from './Toggle'
-import { fetchBuoys, offlineFav, toggleFilter } from '../store/actions/buoys'
-import { getBuoys } from '../store/selectors/buoys'
-import { getFavs } from '../store/selectors/user'
+import { fetchBuoys, offlineFav, toggleFilter } from '../store/ducks/buoys'
+import { getBuoys } from '../store/ducks/buoys'
+import { getFavs } from '../store/ducks/user'
 
 const { connect } = PreactRedux
 

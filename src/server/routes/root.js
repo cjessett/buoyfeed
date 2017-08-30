@@ -5,8 +5,8 @@ import { Router } from 'express'
 import createStore from './../../app/store/createStore'
 import App from './../../app/components/App'
 import withTimeout from './../../app/utils/withTimeout'
-import { fetchInitialState } from './../../app/store/actions/buoys'
-import { updateLocation } from './../../app/store/actions/meta'
+import { fetchInitialState } from './../../app/store/ducks/buoys'
+import { updateLocation } from './../../app/store/ducks/meta'
 
 const assets = JSON.parse(readFileSync(`${__dirname}/public/assets.json`))
 const manifestUrl = `/${assets['manifest.json']}`

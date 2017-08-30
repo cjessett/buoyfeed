@@ -6,7 +6,7 @@ import { devToolsEnhancer } from 'redux-devtools-extension/logOnlyInProduction'
 import defaultConfig from 'redux-offline/lib/defaults'
 import persistStore from 'redux-offline/lib/defaults/persist'
 
-import rootReducer from './reducers/rootReducer'
+import rootReducer from './ducks'
 import IS_CLIENT from '../utils/isClient'
 
 export default () => {

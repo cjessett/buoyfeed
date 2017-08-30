@@ -1,14 +1,21 @@
 import axios from 'axios'
-import { getShouldFetchBuoys, getBuoys } from '../selectors/buoys'
 import { updateLocation } from './meta'
 
-export const FETCH_BUOYS = 'api/FETCH_BUOYS'
+// actionTypes
+const FETCH_BUOYS = 'api/FETCH_BUOYS'
+const FETCH_BUOYS_ERROR = 'api/FETCH_BUOYS_ERROR'
+const TOGGLE_FILTER = 'TOGGLE_FILTER'
 export const FETCH_BUOYS_SUCCESS = 'api/FETCH_BUOYS_SUCCESS'
-export const FETCH_BUOYS_ERROR = 'api/FETCH_BUOYS_ERROR'
 export const FAVORITE = 'FAVORITE'
-export const TOGGLE_FILTER = 'TOGGLE_FILTER'
 export const FAVORITE_ROLLBACK = 'FAVORITE_ROLLBACK'
 
+// selectors
+export const getBuoys = state => state.buoys.collection
+export const getFavorites = state => state.user.favorites
+export const getHasFetchedBuoys = state => state.buoys.hasFetched
+export const getShouldFetchBuoys = state => state.buoys.collection.length === 0
+
+// actions
 const startAction = type => ({ type })
 const successAction = (type, json) => ({ type, payload: json })
 const errorAction = (type, error) => ({ type, payload: error, error: true })
@@ -51,3 +58,45 @@ export const fetchInitialState = query => dispatch => Promise.all([
 ])
 
 export const toggleFilter = () => ({ type: TOGGLE_FILTER })
+
+// reducer
+export const initialState = {
+  isFetching: false,
+  hasFetched: false,
+  hasError: false,
+  error: null,
+  collection: [],
+  onlyFavs: false,
+}
+
+export default (state = initialState, { type, payload }) => {
+  switch (type) {
+    case FETCH_BUOYS:
+      return {
+        ...state,
+        isFetching: true,
+        hasFetched: false,
+        hasError: false,
+        error: null,
+      }
+    case FETCH_BUOYS_ERROR:
+      return {
+        ...state,
+        hasError: true,
+        error: payload,
+        hasFetched: true,
+        isFetching: false,
+      }
+    case FETCH_BUOYS_SUCCESS:
+      return {
+        ...state,
+        collection: payload.buoys,
+        hasFetched: true,
+        isFetching: false,
+      }
+    case TOGGLE_FILTER:
+      return { ...state, onlyFavs: !state.onlyFavs }
+    default:
+      return state
+  }
+}

@@ -2,9 +2,8 @@ import { h, render } from 'preact' // eslint-disable-line no-unused-vars
 import 'preact/devtools'
 import App from './components/App'
 import createStore from './store/createStore'
-import { fetchBuoysIfNeeded } from './store/actions/buoys'
-import { updateLocation, HIDE_TOGGLE, SHOW_TOGGLE } from './store/actions/meta'
-import { getUrl } from './store/selectors/meta'
+import { fetchBuoysIfNeeded } from './store/ducks/buoys'
+import { updateLocation, getUrl, HIDE_TOGGLE, SHOW_TOGGLE } from './store/ducks/meta'
 import ensurePolyfills from './utils/ensurePolyfills'
 
 const app = document.getElementById('app')
