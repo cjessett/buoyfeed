@@ -10,4 +10,4 @@ const isProd = process.env.NODE_ENV === 'production'
 
 const store = isProd ? new RedisStore({ host, port }) : undefined
 
-export default session({ secret, store, resave: false, saveUninitialized: true })
+export default () => session({ secret, store, resave: false, saveUninitialized: true })

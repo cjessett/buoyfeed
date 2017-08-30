@@ -16,7 +16,7 @@ export default (app) => {
   web.use(cacheControl()) // cache control for the rest
   web.use(bodyParser.json())
   web.use(morgan('dev'))
-  web.use(session)
+  web.use(session())
   web.use('/auth', auth(app))
   web.use('/favorites', favorites(app))
   web.use('/buoys', buoys(app))
