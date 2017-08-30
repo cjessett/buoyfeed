@@ -1,39 +1,34 @@
+import axios from 'axios'
 import { updateLocation } from './meta'
 import mockStorage from '../../modules/localStorage'
 
 const localStorage = mockStorage().localStorage
-const credentials = 'include'
-const headers = { Accept: 'application/json', 'content-type': 'application/json' }
 
 export const LOGIN = 'LOGIN'
 export const LOGOUT = 'LOGOUT'
 
-export const login = ({ username, password }) => (dispatch, getState, fetchMethod) => {
-  const body = JSON.stringify({ username, password })
-  return fetchMethod('/auth/login', { method: 'post', body, headers, credentials })
-  .then(response => response.json())
-  .then(({ id }) => {
+export const login = ({ username, password }) => dispatch => (
+  axios.post('/auth/login', { username, password })
+  .then(({ data: { id } }) => {
     dispatch({ type: LOGIN, payload: { id } })
-    dispatch(updateLocation({ url: '/' }))
+    dispatch(updateLocation('/'))
   })
   .catch(error => console.log(error))
-}
+)
 
-export const signup = ({ username, password, passwordConf }) => (dispatch, _, fetchMethod) => {
-  const body = JSON.stringify({ username, password, passwordConf })
-  return fetchMethod('/auth/signup', { method: 'post', body, headers, credentials: 'include' })
-  .then(response => response.json())
-  .then(({ id }) => {
+export const signup = ({ username, password, passwordConf }) => dispatch => (
+  axios.post('/auth/signup', { username, password, passwordConf })
+  .then(({ data: { id } }) => {
     dispatch({ type: LOGIN, payload: { id } })
-    dispatch(updateLocation({ url: '/' }))
+    dispatch(updateLocation('/'))
   })
   .catch(err => console.log(err))
-}
+)
 
-export const logout = () => (dispatch, _, fetchMethod) => {
+export const logout = () => (dispatch) => {
   localStorage.clear()
   dispatch({ type: LOGOUT })
-  return fetchMethod('/auth/logout', { credentials })
-  .then(() => dispatch(updateLocation({ url: '/' })))
+  return axios('/auth/logout', { withCredentials: true })
+  .then(() => dispatch(updateLocation('/')))
   .catch(err => console.log(err))
 }

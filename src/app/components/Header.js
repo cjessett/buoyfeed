@@ -23,7 +23,7 @@ const Header = ({ _updateLocation, _logout, isAuthenticated }) => (
 export default connect(
   state => ({ meta: state.meta, isAuthenticated: !!state.user.id }),
   dispatch => ({
-    _updateLocation: url => dispatch(updateLocation({ url })),
+    _updateLocation: url => dispatch(updateLocation(url)),
     _logout: () => dispatch(logout()),
   })
 )(Header)

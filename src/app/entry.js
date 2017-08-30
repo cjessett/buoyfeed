@@ -16,7 +16,7 @@ ensurePolyfills(() => {
 
   window.addEventListener('popstate', (e) => {
     const url = window.location.pathname + window.location.search
-    store.dispatch(updateLocation({ url }))
+    store.dispatch(updateLocation(url))
   })
   document.addEventListener('touchstart', (e) => {
     ts = e.touches[0].clientY
@@ -36,9 +36,7 @@ ensurePolyfills(() => {
       window.history.pushState({}, '', url)
     }
   })
-  store.dispatch(updateLocation({
-    url: window.location.pathname + window.location.search,
-  }))
+  store.dispatch(updateLocation(window.location.pathname + window.location.search))
   store.dispatch(fetchBuoysIfNeeded())
   render(<App store={store} />, app, app.lastChild)
 })

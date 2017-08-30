@@ -1,5 +1,5 @@
 import { parseString } from 'xml2js'
-import fetch from 'node-fetch'
+import axios from 'axios'
 import mongoose, { Schema } from 'mongoose'
 
 mongoose.Promise = global.Promise
@@ -90,7 +90,7 @@ export default function createFeed({ connection, url }) {
 
       function fetchFeed() {
         console.log('fetching feed')
-        return fetch(url).then(res => res.text())
+        return axios(url).then(res => res.data)
       }
 
       function saveFeed(data) {

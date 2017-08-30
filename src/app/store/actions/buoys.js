@@ -1,45 +1,22 @@
+import axios from 'axios'
 import { getShouldFetchBuoys, getBuoys } from '../selectors/buoys'
-import { getToken } from '../selectors/meta'
 import { updateLocation } from './meta'
 
 export const FETCH_BUOYS = 'api/FETCH_BUOYS'
 export const FETCH_BUOYS_SUCCESS = 'api/FETCH_BUOYS_SUCCESS'
 export const FETCH_BUOYS_ERROR = 'api/FETCH_BUOYS_ERROR'
-export const INVALIDATE_FETCH_BUOYS = 'api/INVALIDATE_FETCH_BUOYS'
 export const FAVORITE = 'FAVORITE'
-export const FETCH_FAVORITES = 'FETCH_FAVORITES'
 export const TOGGLE_FILTER = 'TOGGLE_FILTER'
 export const FAVORITE_ROLLBACK = 'FAVORITE_ROLLBACK'
-
-const buildHeaders = token => (
-  {
-    Authorization: token ? `Bearer ${token}` : '',
-    Accept: 'application/json',
-    'content-type': 'application/json',
-  }
-)
-const credentials = 'include'
-
-const checkStatus = (response) => {
-  if (!response.ok) { // status in the range 200-299 or not
-    return Promise.reject(new Error(response.statusText || 'Status not OK'))
-  }
-  return response
-}
-
-const parseJSON = response => response.json()
 
 const startAction = type => ({ type })
 const successAction = (type, json) => ({ type, payload: json })
 const errorAction = (type, error) => ({ type, payload: error, error: true })
 
-export const fetchBuoys = () => (dispatch, getState, fetchMethod) => {
-  const token = getToken(getState())
-  const headers = token ? { Authorization: `Bearer ${token}` } : {}
+export const fetchBuoys = () => (dispatch) => {
   dispatch(startAction(FETCH_BUOYS))
-  return fetchMethod('/buoys', { headers, credentials })
-  .then(checkStatus)
-  .then(parseJSON)
+  return axios('/buoys')
+  .then(res => res.data)
   .then(({ buoys, favs }) => dispatch(successAction(FETCH_BUOYS_SUCCESS, { buoys, favs })))
   .catch(error => dispatch(errorAction(FETCH_BUOYS_ERROR, error)))
 }
@@ -49,12 +26,12 @@ export const fetchBuoysIfNeeded = () => (dispatch, getState) => {
   return getShouldFetchBuoys(state) ? dispatch(fetchBuoys()) : Promise.resolve(getBuoys(state))
 }
 
-export const fav = (buoy, method, headers) => ({
+export const fav = (buoy, effect) => ({
   type: FAVORITE,
   payload: { buoy },
   meta: {
     offline: {
-      effect: { method, headers, credentials, url: '/favorites', body: JSON.stringify({ buoy }) },
+      effect,
       commit: { type: 'COMMITTING' },
       rollback: { type: FAVORITE_ROLLBACK, meta: { buoy } },
     },
@@ -63,14 +40,14 @@ export const fav = (buoy, method, headers) => ({
 
 export const offlineFav = buoy => (dispatch, getState) => {
   const { user: { favorites, id } } = getState()
-  if (!id) return dispatch(updateLocation({ url: '/login' }))
-  const method = favorites.includes(buoy) ? 'DELETE' : 'POST'
-  const headers = buildHeaders(getToken(getState()))
-  return dispatch(fav(buoy, method, headers))
+  if (!id) return dispatch(updateLocation('/login'))
+  const method = favorites.includes(buoy) ? 'delete' : 'post'
+  const effect = { method, data: { buoy }, withCredentials: true, url: '/favorites' }
+  return dispatch(fav(buoy, effect))
 }
 
 export const fetchInitialState = query => dispatch => Promise.all([
   query.then(buoys => dispatch(successAction(FETCH_BUOYS_SUCCESS, { buoys }))),
 ])
 
-export const toggleFilter = () => dispatch => dispatch({ type: TOGGLE_FILTER })
+export const toggleFilter = () => ({ type: TOGGLE_FILTER })
