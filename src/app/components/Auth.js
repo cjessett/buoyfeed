@@ -1,7 +1,7 @@
 import { h, Component } from 'preact'
 import p from 'preact-redux'
 
-import { login, signup } from '../store/actions/auth'
+import { login, signup } from '../store/ducks/auth'
 
 const { connect } = p
 

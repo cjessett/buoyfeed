@@ -1,7 +1,7 @@
 import { h } from 'preact' // eslint-disable-line no-unused-vars
 import PreactRedux from 'preact-redux'
-import { updateLocation } from './../store/actions/meta'
-import { logout } from '../store/actions/auth'
+import { updateLocation } from './../store/ducks/meta'
+import { logout } from '../store/ducks/auth'
 import Link from './Link'
 
 const { connect } = PreactRedux

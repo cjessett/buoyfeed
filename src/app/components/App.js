@@ -1,7 +1,7 @@
 import { h } from 'preact' // eslint-disable-line no-unused-vars
 import PreactRedux from 'preact-redux' // introduces 2.9kb on gzipped bundle, todo: barf, fix
-import { updateLocation } from '../store/actions/meta'
-import { getPathname } from './../store/selectors/meta'
+import { updateLocation } from '../store/ducks/meta'
+import { getPathname } from './../store/ducks/meta'
 import Header from './Header'
 import Home from './Home'
 import Auth from './Auth'
