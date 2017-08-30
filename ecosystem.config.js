@@ -1,7 +1,7 @@
 module.exports = {
   apps: [{
     name: 'web',
-    script: './build/server.js',
+    script: './build/index.js',
     wait_ready: true,
     autorestart: false,
   }, {

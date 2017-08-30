@@ -6,8 +6,8 @@
     "node": "7"
   },
   "scripts": {
-    "dev": "nodemon -e js,scss -w src -x \"node build && node ./build/server.js\"",
-    "start": "node ./build/server.js",
+    "dev": "nodemon -e js,scss -w src -x \"node build && node ./build/index.js\"",
+    "start": "node ./build/index.js",
     "build": "node build",
     "test": "standard",
     "restart": "pm2 startOrRestart ecosystem.config.js",

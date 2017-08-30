@@ -3,7 +3,7 @@ import app from './app'
 import { FEED_URL } from './constants'
 import mongoConfig from './mongoConfig'
 
-require('dotenv').config()
+require('dotenv').load()
 
 require('source-map-support').install()
 

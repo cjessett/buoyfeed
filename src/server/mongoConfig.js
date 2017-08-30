@@ -1,5 +1,3 @@
-require('dotenv').load()
-
 export default {
   user: process.env.MONGO_USER || '',
   password: process.env.MONGO_PASSWORD || '',

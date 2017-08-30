@@ -20,7 +20,7 @@ const mdl = fs.readFileSync('node_modules/material-design-lite/material.min.css'
 const sourceMap = process.env.NODE_ENV === 'development'
 
 const server = () => rollup({
-  entry: 'src/server/server.js',
+  entry: 'src/server/index.js',
   external: Object.keys(dependencies).concat(['fs', 'util', 'events']),
   plugins: [
     replace({ '__CLIENT__': false }),
@@ -28,7 +28,7 @@ const server = () => rollup({
     commonjs({ extensions: ['.js', '.json'] }),
     buble({ jsx: 'h', objectAssign: 'Object.assign' })
   ]
-}).then(bundle => bundle.write({ sourceMap, format: 'cjs', dest: 'build/server.js' }))
+}).then(bundle => bundle.write({ sourceMap, format: 'cjs', dest: 'build/index.js' }))
 
 const worker = () => rollup({
   entry: 'src/server/worker.js',
