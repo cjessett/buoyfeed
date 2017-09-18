@@ -3,10 +3,11 @@ import { updateLocation } from './meta'
 import { FETCH_BUOYS_SUCCESS, FAVORITE, FAVORITE_ROLLBACK } from './buoys'
 import mockStorage from '../../modules/localStorage'
 
-const localStorage = mockStorage().localStorage
+const { localStorage } = mockStorage()
 
 const LOGIN = 'LOGIN'
 const LOGOUT = 'LOGOUT'
+const ERROR = 'auth/ERROR'
 
 export const login = ({ username, password }) => dispatch => (
   axios.post('/auth/login', { username, password })
@@ -14,7 +15,10 @@ export const login = ({ username, password }) => dispatch => (
     dispatch({ type: LOGIN, payload: { id } })
     dispatch(updateLocation('/'))
   })
-  .catch(error => console.log(error))
+  .catch((err) => {
+    const msg = err.response ? err.response.data : 'Something went wrong'
+    dispatch({ type: ERROR, payload: { login: msg } })
+  })
 )
 
 export const signup = ({ username, password, passwordConf }) => dispatch => (
@@ -23,7 +27,10 @@ export const signup = ({ username, password, passwordConf }) => dispatch => (
     dispatch({ type: LOGIN, payload: { id } })
     dispatch(updateLocation('/'))
   })
-  .catch(err => console.log(err))
+  .catch((err) => {
+    const msg = err.response ? err.response.data : 'Something went wrong'
+    dispatch({ type: ERROR, payload: { signup: msg } })
+  })
 )
 
 export const logout = () => (dispatch) => {
@@ -31,7 +38,10 @@ export const logout = () => (dispatch) => {
   dispatch({ type: LOGOUT })
   return axios('/auth/logout', { withCredentials: true })
   .then(() => dispatch(updateLocation('/')))
-  .catch(err => console.log(err))
+  .catch((err) => {
+    const msg = err.response ? err.response.data : 'Something went wrong'
+    dispatch({ type: ERROR, payload: { logout: msg } })
+  })
 }
 
 // selectors
@@ -41,6 +51,7 @@ export const getFavs = state => state.user.favorites
 export const initialState = {
   favorites: [],
   id: '',
+  error: { login: '', signup: '', logout: '' },
 }
 
 export default (state = initialState, { type, payload }) => {
@@ -59,9 +70,11 @@ export default (state = initialState, { type, payload }) => {
         favorites: payload.favs || state.favorites,
       }
     case LOGIN:
-      return { ...state, id: payload.id }
+      return { ...state, id: payload.id, error: '' }
     case LOGOUT:
       return initialState
+    case ERROR:
+      return { ...state, error: { ...state.error, ...payload } }
     default:
       return state
   }
