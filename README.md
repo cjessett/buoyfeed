@@ -11,6 +11,8 @@ Make sure that [yarn](https://github.com/yarnpkg/yarn) is installed.
 
 Also, [mongodb](https://www.mongodb.com/download-center#community). ([On a mac with brew](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/))
 
+Finally, [redis](https://redis.io/). (sessions)
+
 ### Instructions
 
 Clone the repo
@@ -25,6 +27,11 @@ Install dependencies:
 $ yarn
 ```
 Make sure mongodb is running. ([with brew](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/#run-mongodb))
+
+Make sure redis is running.
+
+**Note, mongo and redis config variables are assumed to be the default, you can set environment variables via a `.env` file**
+
 
 Finally, to run the project for development:
 
