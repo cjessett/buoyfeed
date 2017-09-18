@@ -1,7 +1,7 @@
 import { h } from 'preact' // eslint-disable-line no-unused-vars
 import PreactRedux from 'preact-redux'
 import { updateLocation } from './../store/ducks/meta'
-import { logout } from '../store/ducks/auth'
+import { logout } from '../store/ducks/user'
 import Link from './Link'
 
 const { connect } = PreactRedux
@@ -14,16 +14,15 @@ const Header = ({ _updateLocation, _logout, isAuthenticated }) => (
     <nav>
     {isAuthenticated ?
       <Link className="item" href="/logout" onClick={() => _logout()}>Logout</Link> :
-      <Link className="item" href="/login" onClick={() => _updateLocation('/login')}>Login</Link>
-    }
+      <span>
+        <Link className="item" href="/login" onClick={() => _updateLocation('/login')}>Login</Link>
+        <Link className="item" href="/login" onClick={() => _updateLocation('/signup')}>Sign Up</Link>
+      </span>}
     </nav>
   </header>
 )
 
 export default connect(
   state => ({ meta: state.meta, isAuthenticated: !!state.user.id }),
-  dispatch => ({
-    _updateLocation: url => dispatch(updateLocation(url)),
-    _logout: () => dispatch(logout()),
-  })
+  { _updateLocation: updateLocation, _logout: logout }
 )(Header)
