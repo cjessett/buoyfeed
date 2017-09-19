@@ -47,29 +47,35 @@ $ yarn start
 ```
 
 ## Architecture
- Bootstrapped with [preact-pwa](https://github.com/ezekielchentnik/preact-pwa).
+ Bootstrapped with [preact-pwa](https://github.com/ezekielchentnik/preact-pwa). A `super fast progressive web app` with a small footprint.
 
-A `Super fast progressive web app` with a small footprint.
+This is Universal Javascript application that uses a web-worker model to fetch and then serve buoy data. The `web` and the `worker` are separate node processes, each using an `app` instance.
 
-Features universal rendering, redux, state-driven routing, preact, & service workers.
-Offline support with redux-offline.
-Crunched & optimized with rollup, buble, optimize-js, & purify-css.
+The reason behind this architectural approach is to separate the concerns of handling user requests and processing background work. This allows either process to be scaled independently in response to site load.
 
-#### Features
+Although this application uses only one RSS feed, it can scale to support many feeds and users by using a work queue for fetching and caching/persiting feeds.
 
-- Progressive Web App enabled with [service workers](https://developers.google.com/web/fundamentals/getting-started/primers/service-workers)
-- Offline capable with [service workers](https://developers.google.com/web/fundamentals/getting-started/primers/service-workers)
-- Universal JavaScript (isomorphic rendering)
-- Asset Versioning, long term caching, & cache busting for browser that do not support service workers via [node-rev](https://www.npmjs.com/package/node-rev)
-- Modern JavaScript syntax with [ES6](https://github.com/lukehoban/es6features) via [buble](https://buble.surge.sh/guide/).
-- Performant bundles via [rollup](http://rollupjs.org/).
-- Component-based UI architecture via [Preact](https://preactjs.com/).
-- Application state management w/time-travel debugging via [Redux](https://github.com/gaearon/redux).
-- CSS built with [Sass](http://sass-lang.com/) and optimized with [purify-css](https://github.com/purifycss/purifycss).
-- Async actions handled with [redux-thunk](https://github.com/gaearon/redux-thunk), [isomorphic-fetch](https://github.com/matthew-andrews/isomorphic-fetch), and [promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
-- Node server is built with [express](http://expressjs.com/).
-- Linting is handled with [Standard](http://standardjs.com/).
+#### entry
+`server/index.js`
 
+This is the entry into the app. It runs the `web` process with an `app` instance.
+
+#### web
+`server/web.js`
+
+The Express application that handles web requests.
+
+#### worker
+`server/worker.js`
+
+The process that fetches and saves buoy data from the given RSS feed using an `app` instance.
+
+#### app
+`server/app/index.js`
+
+The `app` interface for the buoy and user data.
+
+---
 License
 
 MIT
