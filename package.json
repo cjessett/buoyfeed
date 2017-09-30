@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "description": "Super fast progressive web app",
   "engines": {
-    "node": "7"
+    "node": "8"
   },
   "scripts": {
     "dev": "nodemon -e js,scss -w src -x \"node build && node ./build/index.js\"",

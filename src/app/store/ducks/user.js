@@ -9,6 +9,7 @@ const LOGIN = 'LOGIN'
 const LOGOUT = 'LOGOUT'
 const ERROR = 'auth/ERROR'
 
+// actions
 export const login = ({ username, password }) => dispatch => (
   axios.post('/auth/login', { username, password })
   .then(({ data: { id } }) => {
