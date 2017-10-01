@@ -2,14 +2,17 @@ import { parseString } from 'xml2js'
 import axios from 'axios'
 import mongoose, { Schema } from 'mongoose'
 
+import { FEED_URL } from '../constants'
+
 mongoose.Promise = global.Promise
 
-export default function createFeed({ connection, url }) {
+export default function createFeed({ connection }) {
   const feedSchema = new Schema({
     title: String,
     pubDate: String,
     description: String,
-    url: { type: String, index: true, unique: true, default: url },
+    lat: String,
+    lon: String,
     items: [{
       pubDate: String,
       title: String,
@@ -35,7 +38,7 @@ export default function createFeed({ connection, url }) {
   })
 
   feedSchema.statics = {
-    pullFeed() {
+    pullFeed(coords) {
       const Feed = this
 
       function descriptionToData(description) {
@@ -57,14 +60,14 @@ export default function createFeed({ connection, url }) {
 
       function getItemProps(item) {
         const { pubDate, title, description, link, guid } = item
-        const [N, W] = item['georss:point'][0].split(' ')
+        const [lat, lon] = item['georss:point'][0].split(' ')
         return {
           guid: guid[0]._.split('-')[1],
           pubDate: pubDate[0],
           title: title[0],
           data: descriptionToData(description[0]),
           link: link[0],
-          coordinates: { N, W },
+          coordinates: { lat, lon },
         }
       }
 
@@ -88,27 +91,28 @@ export default function createFeed({ connection, url }) {
         ))
       }
 
-      function fetchFeed() {
-        console.log('fetching feed')
-        return axios(url).then(res => res.data)
+      function fetchFeed({ lat, lon }) {
+        console.log(`Fetching buoys within 100 mi of ${lat}, ${lon}`)
+        const params = { lat, lon, radius: 100 }
+        return axios(FEED_URL, { params }).then(res => res.data)
       }
 
       function saveFeed(data) {
-        const { title, description, pubDate } = data
-        console.log('saving feed', { title, description, pubDate })
-        return Feed.findOneAndUpdate({ url }, data, { upsert: true }, () => Promise.resolve())
+        return new Promise((resolve, reject) => {
+          const { lat, lon } = coords
+          const { title, description, pubDate, items } = data
+          if (!items.length) reject('no_items')
+
+          console.log('saving feed', { title, description, pubDate })
+          const cb = (err, feed) => (err ? reject(err) : resolve(feed))
+          Feed.findOneAndUpdate({ lat, lon }, data, { upsert: true }, cb)
+        })
       }
 
-      return fetchFeed()
+      return fetchFeed(coords)
         .then(parseFeed)
         .then(saveFeed)
         .catch(err => console.log(err))
-    },
-
-    listBuoys() {
-      return this.findOne({ url: this().url })
-        .exec()
-        .then(feed => feed && feed.items)
     },
   }
 

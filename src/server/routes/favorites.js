@@ -6,7 +6,8 @@ export default (app) => {
     app.addFavorite(id, req.body.buoy)
     .then(() => res.sendStatus(200))
     .catch((err) => {
-      res.status(500).send(err) // handle errors better
+      console.log(err)
+      res.status(500).send('something went wrong')
     })
   }
 
@@ -15,7 +16,8 @@ export default (app) => {
     app.removeFavorite(id, req.body.buoy)
     .then(() => res.sendStatus(200))
     .catch((err) => {
-      res.status(500).send(err) // handle errors better
+      console.log(err)
+      res.status(500).send('something went wrong')
     })
   }
 

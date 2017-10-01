@@ -4,8 +4,6 @@ import { readFileSync } from 'fs'
 import { Router } from 'express'
 import createStore from './../../app/store/createStore'
 import App from './../../app/components/App'
-import withTimeout from './../../app/utils/withTimeout'
-import { fetchInitialState } from './../../app/store/ducks/buoys'
 import { updateLocation } from './../../app/store/ducks/meta'
 
 const assets = JSON.parse(readFileSync(`${__dirname}/public/assets.json`))
@@ -40,13 +38,10 @@ const createAppShell = (store) => {
   return AppShell({ html, state })
 }
 
-export default app => (
+export default () => (
   Router().get('/', (req, res) => {
     const store = createStore()
     store.dispatch(updateLocation(req.originalUrl))
-
-    withTimeout(store.dispatch(fetchInitialState(app.getBuoys())), 100)
-    .then(() => res.send(createAppShell(store)))
-    .catch(err => console.log(err))
+    res.send(createAppShell(store))
   })
 )
