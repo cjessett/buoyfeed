@@ -4,7 +4,8 @@ import { updateLocation } from './meta'
 // actionTypes
 const FETCH_BUOYS = 'api/FETCH_BUOYS'
 const FETCH_BUOYS_ERROR = 'api/FETCH_BUOYS_ERROR'
-const TOGGLE_FILTER = 'TOGGLE_FILTER'
+const SHOW_FAVS = 'SHOW_FAVS'
+const HIDE_FAVS = 'HIDE_FAVS'
 export const FETCH_BUOYS_SUCCESS = 'api/FETCH_BUOYS_SUCCESS'
 export const FAVORITE = 'FAVORITE'
 export const FAVORITE_ROLLBACK = 'FAVORITE_ROLLBACK'
@@ -57,7 +58,8 @@ export const fetchInitialState = query => dispatch => Promise.all([
   query.then(buoys => dispatch(successAction(FETCH_BUOYS_SUCCESS, { buoys }))),
 ])
 
-export const toggleFilter = () => ({ type: TOGGLE_FILTER })
+export const showFavorites = () => ({ type: SHOW_FAVS })
+export const hideFavorites = () => ({ type: HIDE_FAVS })
 
 // reducer
 export const initialState = {
@@ -94,8 +96,10 @@ export default (state = initialState, { type, payload }) => {
         hasFetched: true,
         isFetching: false,
       }
-    case TOGGLE_FILTER:
-      return { ...state, onlyFavs: !state.onlyFavs }
+    case HIDE_FAVS:
+      return { ...state, onlyFavs: false }
+    case SHOW_FAVS:
+      return { ...state, onlyFavs: true }
     default:
       return state
   }
