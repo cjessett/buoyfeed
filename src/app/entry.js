@@ -3,30 +3,17 @@ import 'preact/devtools'
 import App from './components/App'
 import createStore from './store/createStore'
 import { fetchBuoysIfNeeded } from './store/ducks/buoys'
-import { updateLocation, getUrl, HIDE_TOGGLE, SHOW_TOGGLE } from './store/ducks/meta'
+import { updateLocation, getUrl } from './store/ducks/meta'
 import ensurePolyfills from './utils/ensurePolyfills'
 
 const app = document.getElementById('app')
 
 ensurePolyfills(() => {
-  let ts
-  const el = document.getElementById('toggle')
   const store = createStore(window.__STATE__, window.fetch)
 
   window.addEventListener('popstate', (e) => {
     const url = window.location.pathname + window.location.search
     store.dispatch(updateLocation(url))
-  })
-  document.addEventListener('touchstart', (e) => {
-    ts = e.touches[0].clientY
-  }, { passive: true })
-  document.addEventListener('touchmove', (e) => {
-    const te = e.changedTouches[0].clientY
-    if (ts > te) {
-      store.dispatch({ type: HIDE_TOGGLE })
-    } else {
-      store.dispatch({ type: SHOW_TOGGLE })
-    }
   }, { passive: true })
 
   store.subscribe(() => {

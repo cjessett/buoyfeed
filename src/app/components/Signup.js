@@ -32,7 +32,6 @@ class Signup extends Component {
       <div className="Auth">
         <form className="mx-auto" onSubmit={this.handleSubmit}>
           <h3>Sign up</h3>
-          <div class="error">{err || error}</div>
           <div>
             <label htmlFor="username">Username</label><br />
             <input required id="username" onInput={this.handleChange} />
@@ -42,11 +41,11 @@ class Signup extends Component {
             <input required id="password" type="password" onInput={this.handleChange} />
           </div>
           <div>
-            <label>Confirm Password</label><br />
+            <label htmlFor="passwordConf">Confirm Password</label><br />
             <input required id="passwordConf" type="password" onInput={this.handleChange} />
           </div>
-
           <button type="submit">Sign up</button>
+          <div className="error">{err || error}</div>
         </form>
       </div>
     )

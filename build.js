@@ -1,6 +1,7 @@
+/* eslint-disable */
 require('dotenv').config()
 
-const rollup = require('rollup').rollup
+const { rollup } = require('rollup')
 const buble = require('rollup-plugin-buble')
 const commonjs = require('rollup-plugin-commonjs')
 const json = require('rollup-plugin-json')
@@ -9,21 +10,23 @@ const optimizeJs = require('rollup-plugin-optimize-js')
 const replace = require('rollup-plugin-replace')
 const uglify = require('rollup-plugin-uglify')
 const fs = require('fs-extra-promise')
-const sass = require('node-sass').render
-const cssnano = require('cssnano').process
+const { render: sass } = require('node-sass')
+const { process: cssnano } = require('cssnano')
 const purifycss = require('purify-css')
+const { write: swPrecache } = require('sw-precache')
+const { default: nodeRev } = require('node-rev')
+const ugly = require('./uglify')
 const { name, dependencies } = require('./package')
-const swPrecache = require('sw-precache').write
-const nodeRev = require('node-rev').default
 
 const mdl = fs.readFileSync('node_modules/material-design-lite/material.min.css', 'utf-8')
 const sourceMap = process.env.NODE_ENV === 'development'
+const externals = ['fs', 'util', 'events', 'redux-offline/lib/defaults', 'redux-offline/lib/defaults/persist', 'redux-devtools-extension/logOnlyInProduction']
 
 const server = () => rollup({
   entry: 'src/server/index.js',
-  external: Object.keys(dependencies).concat(['fs', 'util', 'events']),
+  external: Object.keys(dependencies).concat(externals),
   plugins: [
-    replace({ '__CLIENT__': false }),
+    replace({ __CLIENT__: false }),
     json(),
     commonjs({ extensions: ['.js', '.json'] }),
     buble({ jsx: 'h', objectAssign: 'Object.assign' })
@@ -34,7 +37,7 @@ const worker = () => rollup({
   entry: 'src/server/worker.js',
   external: Object.keys(dependencies).concat(['fs', 'util', 'events', 'http']),
   plugins: [
-    replace({ '__CLIENT__': false }),
+    replace({ __CLIENT__: false }),
     json(),
     commonjs({ extensions: ['.js', '.json'] }),
     buble({ jsx: 'h', objectAssign: 'Object.assign' })
@@ -48,26 +51,24 @@ const client = () => rollup({
     nodeResolve({ jsnext: true, browser: true }),
     commonjs(),
     replace({
-      '__CLIENT__': true,
+      __CLIENT__: true,
       'process.env.NODE_ENV': JSON.stringify('production'),
-      'process.env.REDIRECT_URI': process.env.REDIRECT_URI,
-      'process.env.CLIENT_ID': process.env.CLIENT_ID,
-      'process.env.AUTH0_DOMAIN': process.env.AUTH0_DOMAIN,
     }),
     buble({ jsx: 'h', objectAssign: 'Object.assign' }),
-    uglify(require('./uglify')),
+    uglify(ugly),
     optimizeJs()
   ]
 })
-.then((bundle) => bundle.write({ sourceMap, format: 'iife', dest: `build/public/bundle.js` }))
+.then(bundle => bundle.write({ sourceMap, format: 'iife', dest: 'build/public/bundle.js' }))
 
-const css = () => new Promise((resolve, reject) => sass({ file: `src/app/styles/entry.scss` }, (err, result) => err ? reject(err) : resolve(result)))
+const css = () => new Promise((resolve, reject) =>
+  sass({ file: 'src/app/styles/entry.scss' }, (err, result) => (err ? reject(err) : resolve(result))))
   .then(({ css }) => purifycss(['src/app/components/**/*.js'], css.toString().concat(mdl)))
-  .then((purified) => cssnano(purified, { autoprefixer: { add: true } }))
-  .then(({ css }) => fs.outputFileAsync(`build/public/bundle.css`, css))
+  .then(purified => cssnano(purified, { autoprefixer: { add: true } }))
+  .then(({ css }) => fs.outputFileAsync('build/public/bundle.css', css))
 
 const sw = () => swPrecache('build/public/sw.js', {
-  cacheId: `${name}`,
+  cacheId: name,
   directoryIndex: '/',
   staticFileGlobs: [
     '/',
@@ -95,14 +96,14 @@ const rev = () => Promise.resolve(nodeRev({
 }))
 
 const clean = () => fs.emptyDirAsync('./build')
-const copy = () => fs.copyAsync(`src/app/static/`, `./build/public/`)
+const copy = () => fs.copyAsync('src/app/static/', './build/public/')
 
 const tasks = new Map()
 const run = (task) => {
   const start = new Date()
   return tasks.get(task)().then(
     () => console.log('\x1b[36m%s\x1b[0m', '[build]', `'${task}' done in ${new Date().getTime() - start.getTime()}ms`),
-    (err) => console.error('\x1b[31m%s\x1b[0m', '[build]', `error running '${task}':`, err)
+    err => console.error('\x1b[31m%s\x1b[0m', '[build]', `error running '${task}':`, err)
   )
 }
 

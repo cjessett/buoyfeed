@@ -12,7 +12,7 @@ import IS_CLIENT from '../utils/isClient'
 export default () => {
   const config = Object.assign({}, defaultConfig, {
     effect: effectConfig => axios(effectConfig),
-    persist: (store) => { if (typeof self === 'object') persistStore(store) },
+    persist: (store) => { if (typeof self === 'object') persistStore(store, { blacklist: ['meta', 'buoys'] }) },
   })
   const enhancer = compose(
       applyMiddleware(thunk),

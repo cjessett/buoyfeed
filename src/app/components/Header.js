@@ -6,23 +6,30 @@ import Link from './Link'
 
 const { connect } = PreactRedux
 
-const Header = ({ _updateLocation, _logout, isAuthenticated }) => (
-  <header className="Header">
-    <h1>
-      <Link className="item" href="/" onClick={() => _updateLocation('/')}>Buoy Feed</Link>
-    </h1>
-    <nav>
-    {isAuthenticated ?
-      <Link className="item" href="/logout" onClick={() => _logout()}>Logout</Link> :
-      <span>
-        <Link className="item" href="/login" onClick={() => _updateLocation('/login')}>Login</Link>
-        <Link className="item" href="/login" onClick={() => _updateLocation('/signup')}>Sign Up</Link>
-      </span>}
-    </nav>
-  </header>
-)
+const Header = ({ _updateLocation, _logout, isAuthenticated, url }) => {
+  const goTo = path => () => _updateLocation(path)
+  const activeClass = path => (path === url ? 'active' : '')
+  return (
+    <header className="Header">
+      <nav>
+        <Link className={`item ${activeClass('/')}`} href="/" onClick={goTo('/')}>
+          <i className="material-icons">home</i>
+        </Link>
+        <Link className={`item ${activeClass('/favorites')}`} href="/favorites" onClick={goTo('/favorites')}>
+          <i className="material-icons">star</i>
+        </Link>
+        {isAuthenticated ?
+          <Link className="item" href="/logout" onClick={() => _logout()}>Logout</Link> :
+          <span className="item" style={{ display: 'flex' }}>
+            <Link className={`item ${activeClass('/login')}`} href="/login" onClick={goTo('/login')}>Login</Link>
+            <Link className={`item ${activeClass('/signup')}`} href="/signup" onClick={goTo('/signup')}>Sign Up</Link>
+          </span>}
+      </nav>
+    </header>
+  )
+}
 
 export default connect(
-  state => ({ meta: state.meta, isAuthenticated: !!state.user.id }),
+  state => ({ url: state.meta.url, isAuthenticated: !!state.user.id }),
   { _updateLocation: updateLocation, _logout: logout }
 )(Header)

@@ -27,11 +27,7 @@ function createServer() {
     server.close(() => process.exit(0))
   }
 
-  process.on('SIGTERM', () => {
-    instance
-      .removeListener('lost', () => process.exit(0))
-      .on('lost', shutdown)
-  })
+  process.on('SIGTERM', shutdown)
 }
 
 instance.on('ready', createServer)
