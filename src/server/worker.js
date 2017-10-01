@@ -19,8 +19,8 @@ function start() {
 
   if (process.env.NODE_ENV === 'production') process.send('ready')
   instance.on('lost', shutdown)
-  instance.updateFeed()
-  setInterval(() => instance.updateFeed(), refreshInterval * 60 * 1000)
+  instance.updateFeeds()
+  setInterval(() => instance.updateFeeds(), refreshInterval * 60 * 1000)
 
   process.on('SIGTERM', shutdown)
 }

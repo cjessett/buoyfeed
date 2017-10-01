@@ -9,12 +9,13 @@ const { connect } = PreactRedux
 
 class Home extends Component {
   componentDidMount() {
-    this.props.fetchBuoys()
+    this.props.fetchBuoys({ lat: '40N', lon: '73W' })
   }
 
   render(props) {
-    const defaultText = props.favs ? 'You have no favorites.' : 'No Buoys'
-    const defaultView = props.loading ? '' : <h3>{defaultText}</h3>
+    if (props.isFetching) return null
+    if (props.error) return <h5 className="content">{props.error}</h5>
+    const defaultText = <h5>{props.favs ? 'You have no favorites.' : 'No Buoys.'}</h5>
     const visibleBuoys = props.buoys
       .map(b =>
         <Buoy
@@ -28,7 +29,8 @@ class Home extends Component {
     return (
       <div className="Home">
         <section className="content">
-          { props.buoys.length ? visibleBuoys : defaultView }
+          <h5>{ props.description }</h5>
+          { props.buoys.length ? visibleBuoys : defaultText }
         </section>
       </div>
     )
@@ -40,9 +42,8 @@ function mapStateToProps(state, ownProps) {
     getBuoys(state).filter(b => getFavs(state).includes(b.guid)) :
     getBuoys(state)
   const favs = getFavs(state)
-  const onlyFavs = state.buoys.onlyFavs
-  const loading = state.buoys.isFetching
-  return { buoys, favs, onlyFavs, loading }
+  const { description, isFetching, error } = state.buoys
+  return { buoys, favs, isFetching, description, error }
 }
 
 export default connect(mapStateToProps, { fetchBuoys, offlineFav })(Home)

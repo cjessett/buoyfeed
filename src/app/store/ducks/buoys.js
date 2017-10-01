@@ -4,8 +4,6 @@ import { updateLocation } from './meta'
 // actionTypes
 const FETCH_BUOYS = 'api/FETCH_BUOYS'
 const FETCH_BUOYS_ERROR = 'api/FETCH_BUOYS_ERROR'
-const SHOW_FAVS = 'SHOW_FAVS'
-const HIDE_FAVS = 'HIDE_FAVS'
 export const FETCH_BUOYS_SUCCESS = 'api/FETCH_BUOYS_SUCCESS'
 export const FAVORITE = 'FAVORITE'
 export const FAVORITE_ROLLBACK = 'FAVORITE_ROLLBACK'
@@ -21,17 +19,12 @@ const startAction = type => ({ type })
 const successAction = (type, json) => ({ type, payload: json })
 const errorAction = (type, error) => ({ type, payload: error, error: true })
 
-export const fetchBuoys = () => (dispatch) => {
+export const fetchBuoys = params => (dispatch) => {
   dispatch(startAction(FETCH_BUOYS))
-  return axios('/buoys')
+  return axios('/buoys', { params })
   .then(res => res.data)
-  .then(({ buoys, favs }) => dispatch(successAction(FETCH_BUOYS_SUCCESS, { buoys, favs })))
+  .then(({ feed, favs }) => dispatch(successAction(FETCH_BUOYS_SUCCESS, { feed, favs })))
   .catch(error => dispatch(errorAction(FETCH_BUOYS_ERROR, error)))
-}
-
-export const fetchBuoysIfNeeded = () => (dispatch, getState) => {
-  const state = getState()
-  return getShouldFetchBuoys(state) ? dispatch(fetchBuoys()) : Promise.resolve(getBuoys(state))
 }
 
 export const fav = (buoy, effect) => ({
@@ -54,13 +47,6 @@ export const offlineFav = buoy => (dispatch, getState) => {
   return dispatch(fav(buoy, effect))
 }
 
-export const fetchInitialState = query => dispatch => Promise.all([
-  query.then(buoys => dispatch(successAction(FETCH_BUOYS_SUCCESS, { buoys }))),
-])
-
-export const showFavorites = () => ({ type: SHOW_FAVS })
-export const hideFavorites = () => ({ type: HIDE_FAVS })
-
 // reducer
 export const initialState = {
   isFetching: false,
@@ -68,7 +54,7 @@ export const initialState = {
   hasError: false,
   error: null,
   collection: [],
-  onlyFavs: false,
+  description: '',
 }
 
 export default (state = initialState, { type, payload }) => {
@@ -92,14 +78,11 @@ export default (state = initialState, { type, payload }) => {
     case FETCH_BUOYS_SUCCESS:
       return {
         ...state,
-        collection: payload.buoys,
+        collection: payload.feed.items,
+        description: payload.feed.description,
         hasFetched: true,
         isFetching: false,
       }
-    case HIDE_FAVS:
-      return { ...state, onlyFavs: false }
-    case SHOW_FAVS:
-      return { ...state, onlyFavs: true }
     default:
       return state
   }

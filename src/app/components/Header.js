@@ -1,14 +1,14 @@
 import { h } from 'preact' // eslint-disable-line no-unused-vars
 import PreactRedux from 'preact-redux'
-import { updateLocation } from './../store/ducks/meta'
+import { updateLocation, getPathname } from './../store/ducks/meta'
 import { logout } from '../store/ducks/user'
 import Link from './Link'
 
 const { connect } = PreactRedux
 
-const Header = ({ _updateLocation, _logout, isAuthenticated, url }) => {
+const Header = ({ _updateLocation, _logout, isAuthenticated, pathname }) => {
   const goTo = path => () => _updateLocation(path)
-  const activeClass = path => (path === url ? 'active' : '')
+  const activeClass = path => (path === pathname ? 'active' : '')
   return (
     <header className="Header">
       <nav>
@@ -30,6 +30,6 @@ const Header = ({ _updateLocation, _logout, isAuthenticated, url }) => {
 }
 
 export default connect(
-  state => ({ url: state.meta.url, isAuthenticated: !!state.user.id }),
+  state => ({ pathname: getPathname(state), isAuthenticated: !!state.user.id }),
   { _updateLocation: updateLocation, _logout: logout }
 )(Header)
