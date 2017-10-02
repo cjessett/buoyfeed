@@ -5,9 +5,7 @@
 
 ### Prerequisites
 
-Make sure that [Node v7](https://nodejs.org/en/download/releases/) is installed.
-
-Make sure that [yarn](https://github.com/yarnpkg/yarn) is installed.
+Make sure that [Node v8](https://nodejs.org/en/download/releases/) is installed.
 
 Also, [mongodb](https://www.mongodb.com/download-center#community). ([On a mac with brew](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/))
 
@@ -51,9 +49,12 @@ $ yarn start
 
 This is Universal Javascript application that uses a web-worker model to fetch and then serve buoy data. The `web` and the `worker` are separate node processes, each using an `app` instance.
 
-The reason behind this architectural approach is to separate the concerns of handling user requests and processing background work. This allows either process to be scaled independently in response to site load.
+The reason behind this architectural approach is to separate the concerns of handling web requests and processing background work. This allows either process to be scaled independently in response to site load.
 
-Although this application uses only one RSS feed, it can scale to support many feeds and users by using a work queue for fetching and caching/persiting feeds.
+Although this application uses only one RSS feed, it can scale to support many feeds and users. One approach would be to use a work queue for fetching and caching/persiting feeds.
+
+Note that in development mode the worker is not used and the web process handles fetching and persisting the feed.
+
 
 #### entry
 `server/index.js`
