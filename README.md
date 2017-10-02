@@ -57,22 +57,22 @@ Note that in development mode the worker is not used and the web process handles
 
 
 #### entry
-`server/index.js`
+[`server/index.js`](./src/server/index.js)
 
 This is the entry into the app. It runs the `web` process with an `app` instance.
 
 #### web
-`server/web.js`
+[`server/web.js`](./src/server/web.js)
 
 The Express application that handles web requests.
 
 #### worker
-`server/worker.js`
+[`server/worker.js`](./src/server/worker.js)
 
 The process that fetches and saves buoy data from the given RSS feed using an `app` instance.
 
 #### app
-`server/app/index.js`
+[`server/app/index.js`](./src/server/app/index.js)
 
 The `app` interface for the buoy and user data.
 
