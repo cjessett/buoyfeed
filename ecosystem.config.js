@@ -4,6 +4,9 @@ module.exports = {
     script: './build/index.js',
     wait_ready: true,
     autorestart: false,
+    error_file: 'err.log',
+    out_file: 'out.log',
+    log_date_format: 'YYYY-MM-DD HH:mm Z',
   }, {
     name: 'worker',
     script: './build/worker.js',
