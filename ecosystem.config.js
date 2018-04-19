@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 module.exports = {
   apps: [{
     name: 'web',
@@ -15,12 +17,12 @@ module.exports = {
   }],
   deploy: {
     production: {
-      user: 'ubuntu',
-      host: 'cjessett.com',
-      key: '~/.ssh/buoyfeed.pem',
+      user: process.env.user,
+      host: process.env.host,
+      key: process.env.key,
       ref: 'origin/master',
       repo: 'git@github.com:cjessett/buoyfeed.git',
-      path: '/home/ubuntu/buoyfeed',
+      path: '/home/buoyfeed',
       'post-deploy': 'yarn && yarn build && yarn pm2 startOrRestart ecosystem.config.js',
     },
   },
