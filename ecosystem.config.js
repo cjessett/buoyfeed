@@ -22,7 +22,7 @@ module.exports = {
       key: process.env.key,
       ref: 'origin/master',
       repo: 'git@github.com:cjessett/buoyfeed.git',
-      path: '/home/buoyfeed',
+      path: process.env.path,
       'post-deploy': 'yarn && yarn build && yarn pm2 startOrRestart ecosystem.config.js',
     },
   },
