@@ -6,7 +6,7 @@ function Connector({ host, database, port, user, password }) {
   EventEmitter.call(this)
 
   const uri = `mongodb://${user}:${password}@${host}:${port}/${database}`
-  this.db = mongoose.createConnection(uri)
+  this.db = mongoose.createConnection(uri, { keepAlive: 1 })
   .on('connected', () => {
     console.log({ type: 'info', msg: 'connected', service: 'mongodb', uri })
     this.emit('ready')
