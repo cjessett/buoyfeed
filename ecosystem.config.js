@@ -12,6 +12,8 @@ module.exports = {
   }, {
     name: 'worker',
     script: './build/worker.js',
+    error_file: 'worker-err.log',
+    out_file: 'worker-out.log',
     wait_ready: true,
     autorestart: false,
   }],
@@ -20,10 +22,10 @@ module.exports = {
       user: process.env.user,
       host: process.env.host,
       key: process.env.key,
-      ref: 'origin/master',
+      ref: 'remotes/origin/terraform',
       repo: 'https://github.com/cjessett/buoyfeed',
       path: process.env.path,
-      'post-deploy': 'yarn && yarn pm2 startOrRestart ecosystem.config.js',
+      'post-deploy': 'yarn && yarn build && yarn pm2 startOrRestart ecosystem.config.js',
     },
   },
 }

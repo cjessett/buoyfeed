@@ -19,7 +19,7 @@ function createServer() {
   }
 
   const server = webInstance.listen(process.env.PORT || 8080, () => {
-    if (process.env.NODE_ENV === 'production') process.send('ready')
+    if (process.env.NODE_ENV === 'production') instance.send('ready')
     console.log(`[server] app on http://localhost:${server.address().port} - ${webInstance.settings.env}`)
   })
 

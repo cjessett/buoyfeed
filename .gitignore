@@ -1,6 +1,8 @@
 # dependencies
 node_modules
 
+.env*
+
 # logs
 npm-debug.log
 
@@ -12,3 +14,5 @@ coverage
 .eslint*
 
 ecosystem.config.js
+.terraform*
+build/
