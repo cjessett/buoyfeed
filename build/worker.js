@@ -21,7 +21,8 @@ function Connector(ref) {
   events.EventEmitter.call(this);
 
   var uri = "mongodb://" + user + ":" + password + "@" + host + ":" + port + "/" + database;
-  this.db = mongoose__default.createConnection(uri, { keepAlive: 1 })
+  var opts = { keepAlive: 1, useCreateIndex: true, useNewUrlParser: true, useFindAndModify: false };
+  this.db = mongoose__default.createConnection(uri, opts)
   .on('connected', function () {
     console.log({ type: 'info', msg: 'connected', service: 'mongodb', uri: uri });
     this$1.emit('ready');
@@ -348,3 +349,4 @@ function start() {
 }
 
 instance.on('ready', start);
+//# sourceMappingURL=worker.js.map

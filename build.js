@@ -8,12 +8,12 @@ const json = require('rollup-plugin-json')
 const nodeResolve = require('rollup-plugin-node-resolve')
 const optimizeJs = require('rollup-plugin-optimize-js')
 const replace = require('rollup-plugin-replace')
-const uglify = require('rollup-plugin-uglify')
+const { uglify } = require('rollup-plugin-uglify')
 const fs = require('fs-extra-promise')
 const { render: sass } = require('node-sass')
 const { process: cssnano } = require('cssnano')
 const purifycss = require('purify-css')
-const { write: swPrecache } = require('sw-precache')
+const { generateSW: swPrecache } = require('workbox-build')
 const { default: nodeRev } = require('node-rev')
 const ugly = require('./uglify')
 const { name, dependencies } = require('./package')
@@ -49,12 +49,12 @@ const client = () => rollup({
   context: 'window',
   plugins: [
     nodeResolve({ jsnext: true, browser: true }),
-    commonjs(),
+    commonjs({ include: /node_modules/, namedExports:  }),
     replace({
       __CLIENT__: true,
       'process.env.NODE_ENV': JSON.stringify('production'),
     }),
-    buble({ jsx: 'h', objectAssign: 'Object.assign' }),
+    buble({ jsx: 'h', objectAssign: 'Object.assign', exclude: /node_modules/ }),
     uglify(ugly),
     optimizeJs()
   ]
@@ -67,25 +67,12 @@ const css = () => new Promise((resolve, reject) =>
   .then(purified => cssnano(purified, { autoprefixer: { add: true } }))
   .then(({ css }) => fs.outputFileAsync('build/public/bundle.css', css))
 
-const sw = () => swPrecache('build/public/sw.js', {
-  cacheId: name,
-  directoryIndex: '/',
-  staticFileGlobs: [
-    '/',
-    './build/public/manifest-*.json',
-    // './build/public/bundle-*.{css,js}', // depends if we inlineJs, inlineCss or not
-    './build/public/*.{gif,png,svg}' // will not preache /icons
-  ],
-  navigateFallback: '/',
-  dynamicUrlToDependencies: {
-    '/': ['./src/server/routes/root.js', './build/public/bundle.css', './build/public/bundle.js', './build/public/manifest.json', './package.json'] // bust cache when these change
-  },
-  skipWaiting: true,
-  stripPrefix: './build/public',
-  runtimeCaching: [{
-    urlPattern: /\/posts/, // handle remote api call
-    handler: 'cacheFirst'
-  }]
+const sw = () => swPrecache({
+  globDirectory: 'build',
+   globPatterns: [
+     '**\/*.{html,json,js,css}',
+   ],
+   swDest: 'build/sw.js'
 })
 
 const rev = () => Promise.resolve(nodeRev({

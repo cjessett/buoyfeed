@@ -12,3 +12,5 @@ coverage
 .eslint*
 
 ecosystem.config.js
+
+.env*

@@ -671,7 +671,7 @@ var AppShell = function (ref) {
   var html = ref.html;
   var state = ref.state;
 
-  return ("<!DOCTYPE html>\n<html lang=\"en-US\">\n  <head>\n    <script>if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js'); }</script>\n    <title>BuoyFeed</title>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <meta name=\"mobile-web-app-capable\" content=\"yes\">\n    <meta name=\"theme-color\" content=\"#002b49\">\n    <link rel=\"manifest\" href=\"" + manifestUrl + "\">\n    <link rel=\"dns-prefetch\" href=\"https://jsonplaceholder.typicode.com\">\n    <link rel=\"shortcut icon\"type=\"image/x-icon\" href=\"data:image/x-icon;,\">\n    <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/icon?family=Material+Icons\">\n    <style>" + inlineCss + "</style>\n  </head>\n  <body>\n    <div id=\"app\">" + html + "</div>\n    <script>window.__STATE__=" + (JSON.stringify(state).replace(/</g, '\\u003c')) + "</script>\n    <script>" + inlineJs + "</script>\n  </body>\n</html>");
+  return ("<!DOCTYPE html>\n<html lang=\"en-US\">\n  <head>\n    <script>if ('serviceWorker' in navigator) {\n      window.addEventListener('load', () => {\n        navigator.serviceWorker.register('/service-worker.js');\n      });\n    }</script>\n    <title>BuoyFeed</title>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <meta name=\"mobile-web-app-capable\" content=\"yes\">\n    <meta name=\"theme-color\" content=\"#002b49\">\n    <link rel=\"manifest\" href=\"" + manifestUrl + "\">\n    <link rel=\"dns-prefetch\" href=\"https://jsonplaceholder.typicode.com\">\n    <link rel=\"shortcut icon\"type=\"image/x-icon\" href=\"data:image/x-icon;,\">\n    <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/icon?family=Material+Icons\">\n    <style>" + inlineCss + "</style>\n  </head>\n  <body>\n    <div id=\"app\">" + html + "</div>\n    <script>window.__STATE__=" + (JSON.stringify(state).replace(/</g, '\\u003c')) + "</script>\n    <script>" + inlineJs + "</script>\n  </body>\n</html>");
 };
 
 var createAppShell = function (store) {
@@ -847,7 +847,8 @@ function Connector(ref) {
   events.EventEmitter.call(this);
 
   var uri = "mongodb://" + user + ":" + password + "@" + host + ":" + port + "/" + database;
-  this.db = mongoose__default.createConnection(uri, { keepAlive: 1 })
+  var opts = { keepAlive: 1, useCreateIndex: true, useNewUrlParser: true, useFindAndModify: false };
+  this.db = mongoose__default.createConnection(uri, opts)
   .on('connected', function () {
     console.log({ type: 'info', msg: 'connected', service: 'mongodb', uri: uri });
     this$1.emit('ready');
@@ -1176,3 +1177,4 @@ function createServer() {
 }
 
 instance.on('ready', createServer);
+//# sourceMappingURL=index.js.map

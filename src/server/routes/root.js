@@ -13,7 +13,11 @@ const inlineJs = readFileSync(`${__dirname}/public/${assets['bundle.js']}`)
 const AppShell = ({ html, state }) => `<!DOCTYPE html>
 <html lang="en-US">
   <head>
-    <script>if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js'); }</script>
+    <script>if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js');
+      });
+    }</script>
     <title>BuoyFeed</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
