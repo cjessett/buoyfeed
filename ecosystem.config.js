@@ -17,12 +17,12 @@ module.exports = {
   }],
   deploy: {
     production: {
-      user: process.env.user,
-      host: process.env.host,
-      key: process.env.key,
+      user: process.env.PROD_USER,
+      host: process.env.PROD_HOST,
+      key: process.env.PROD_KEY_PATH,
       ref: 'origin/master',
       repo: 'https://github.com/cjessett/buoyfeed',
-      path: process.env.path,
+      path: process.env.PROD_PATH,
       'post-deploy': 'yarn && yarn pm2 startOrRestart ecosystem.config.js',
     },
   },
